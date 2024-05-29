@@ -1,7 +1,7 @@
 import pygame
 
 game_name = "Dino"
-game_icon = pygame.image.load("dino.png")
+game_icon = pygame.image.load("Media\dino.png")
 
 display_width = 300
 display_height = 300
