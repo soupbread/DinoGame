@@ -1,3 +1,5 @@
+# Video: 53:44
+
 import pygame
 
 running = True
@@ -25,10 +27,14 @@ screen = pygame.display.set_mode((display_width, display_height))
 clock = pygame.time.Clock()
 
 # Surfaces
-background = pygame.image.load('media\graphics\\backgrounds\grass.png')
-foreground = pygame.image.load('media\graphics\\backgrounds\grass1.png')
-player = pygame.image.load('media\graphics\player\mario-poster.png')
-text = font.render("Dino game",False, "#1a2b15")
+background = pygame.image.load('media\graphics\\backgrounds\grass.png').convert()
+foreground = pygame.image.load('media\graphics\\backgrounds\grass1.png').convert()
+player = pygame.image.load('media\graphics\player\mario-poster.png').convert_alpha()
+test_text = font.render("Dino game",False, "#1a2b15")
+
+# Movement
+player_x_pos = 100
+player_y_pos = 400
 
 # Main loop
 while running:
@@ -41,11 +47,14 @@ while running:
     # Surfaces init
     screen.blit(background, (0,0))
     screen.blit(foreground, (0,550))
-    screen.blit(player, (100, 400))
-    screen.blit(text, (300, 300))
+    screen.blit(test_text, (300, 100))
+
+    player_x_pos+=20
+    if player_x_pos>1080: player_x_pos = -200
+    screen.blit(player, (player_x_pos, player_y_pos))
 
     # Refresh
     pygame.display.update()
-    
+
     # Frame rate (ceiling)
     clock.tick(60)
