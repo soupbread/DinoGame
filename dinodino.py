@@ -1,60 +1,67 @@
-# Video: 53:44
-
 import pygame
-
-running = True
 
 pygame.init()
 
-# Display-related init
-# Window
-game_name = "Dino"
-game_icon = pygame.image.load('media\dino.png')
+is_running = True
 
-pygame.display.set_caption(game_name)
-pygame.display.set_icon(game_icon)
+# window properties
+pygame.display.set_caption("Dino")
+pygame.display.set_icon(pygame.image.load('media\dino.png'))
 
-# Font
-font = pygame.font.Font('media\\font\GOUDYSTO.TTF', 50)
+# display (screen)
+display = pygame.display.set_mode((800,400))
 
-# Screen
-display_width = 1080
-display_height = 720
-
-screen = pygame.display.set_mode((display_width, display_height))
-
-# Clock
+# clock
 clock = pygame.time.Clock()
 
-# Surfaces
-background = pygame.image.load('media\graphics\\backgrounds\grass.png').convert()
-foreground = pygame.image.load('media\graphics\\backgrounds\grass1.png').convert()
-player = pygame.image.load('media\graphics\player\mario-poster.png').convert_alpha()
-test_text = font.render("Dino game",False, "#1a2b15")
+# surfaces
+background = pygame.image.load('media\graphics\environment\sky.png')
 
-# Movement
-player_x_pos = 100
-player_y_pos = 400
+ground = pygame.image.load('media\graphics\environment\ground.png')
+ground_rect_1 = ground.get_rect(bottomleft=(0,400))
+ground_rect_2 = ground.get_rect(bottomleft=ground_rect_1.bottomright)
 
-# Main loop
-while running:
-    # Exit
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
+foreground = pygame.image.load('media\graphics\environment\\foreground.png')
+
+# characters
+# player
+player = pygame.image.load('media\graphics\characters\player\player.png')
+player_rect = player.get_rect(bottomleft=(50, 300))
+
+# enemies
+test_enemy = pygame.image.load('media\graphics\characters\player\player.png')
+test_enemy_rect = test_enemy.get_rect(bottomleft=(700, 300))
+
+while is_running:
+    # check whether window has been closed
+    for e in pygame.event.get():
+        if e.type == pygame.QUIT:
             pygame.quit()
             exit()
-    
-    # Surfaces init
-    screen.blit(background, (0,0))
-    screen.blit(foreground, (0,550))
-    screen.blit(test_text, (300, 100))
 
-    player_x_pos+=20
-    if player_x_pos>1080: player_x_pos = -200
-    screen.blit(player, (player_x_pos, player_y_pos))
+    # surfaces
+    display.blit(background, (0,0))
+    display.blit(ground, ground_rect_1)
+    display.blit(ground, ground_rect_2)
+    display.blit(player, player_rect)
 
-    # Refresh
+    display.blit(test_enemy, test_enemy_rect)
+    test_enemy_rect.left-=5
+    if test_enemy_rect.right<=0: test_enemy_rect.left=800
+
+    display.blit(foreground, (0, 250))
+
+    ground_rect_1.left-=5
+    ground_rect_2.left-=5
+
+    # infinite scrolling
+    if ground_rect_1.right<=800: ground_rect_2.left=ground_rect_1.right
+    if ground_rect_2.right<=800: ground_rect_1.left=ground_rect_2.right
+
+    if test_enemy_rect.colliderect(player_rect): print("COLLISION")
+
+    # update display
     pygame.display.update()
 
-    # Frame rate (ceiling)
+    # ceiling frame rate
     clock.tick(60)
