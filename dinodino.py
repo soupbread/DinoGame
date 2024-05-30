@@ -51,13 +51,14 @@ while is_running:
 
     display.blit(foreground, (0, 250))
 
+    # infinite scrolling
     ground_rect_1.left-=5
     ground_rect_2.left-=5
 
-    # infinite scrolling
     if ground_rect_1.right<=800: ground_rect_2.left=ground_rect_1.right
     if ground_rect_2.right<=800: ground_rect_1.left=ground_rect_2.right
 
+    # collision
     if test_enemy_rect.colliderect(player_rect): print("COLLISION")
 
     # update display
