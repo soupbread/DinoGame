@@ -2,6 +2,7 @@ import pygame
 
 pygame.init()
 
+# status
 is_running = True
 is_playing = True
 
@@ -9,7 +10,7 @@ is_playing = True
 pygame.display.set_caption("Dino")
 pygame.display.set_icon(pygame.image.load('media/dino.png'))
 
-# display (screen)
+# display (screen) init
 display = pygame.display.set_mode((800,400))
 
 # clock
@@ -24,7 +25,6 @@ ground_rect_2 = ground.get_rect(bottomleft=ground_rect_1.bottomright)
 
 foreground = pygame.image.load('media/graphics/environment/foreground.png')
 
-# characters
 # player
 player = pygame.image.load('media/graphics/characters/player/player.png')
 player_rect = player.get_rect(bottomleft=(50, 300))
@@ -58,10 +58,12 @@ def restart():
     global player_rect
     global test_enemy_rect
     global ground_rect_1
+    global speed
 
     test_enemy_rect.bottomleft=(700, 300)
     ground_rect_1.bottomleft=(0,400)
     player_rect.bottomleft=(50, 300)
+    speed = 0
 
 while is_running:
     # check whether window has been closed
@@ -107,7 +109,7 @@ while is_running:
         player_jump()
 
         # enemy movement
-        test_enemy_rect.left-=5
+        test_enemy_rect.left-=speed
         if test_enemy_rect.right<=0: test_enemy_rect.left=800
 
         # collision
@@ -115,6 +117,8 @@ while is_running:
             print("you died")
             display.blit(died, (0,0))
             is_playing = False
+
+        speed+=0.01
 
         # update display
         pygame.display.update()
