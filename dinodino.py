@@ -37,6 +37,7 @@ test_enemy_rect = test_enemy.get_rect(bottomleft=(700, 300))
 
 # general variables
 score = 0
+speed = 5
 
 # title screen
 def title_screen():
@@ -52,11 +53,13 @@ def player_jump():
         player_rect.bottom=300
 
 def restart():
+    global player_rect
     global test_enemy_rect
     global ground_rect_1
 
     test_enemy_rect.bottomleft=(700, 300)
     ground_rect_1.bottomleft=(0,400)
+    player_rect.bottomleft=(50, 300)
 
 while is_running:
     # check whether window has been closed
@@ -80,7 +83,7 @@ while is_running:
                 restart()
     
     if is_playing:
-        
+
         # all surfaces
         display.blit(background, (0,0))
         display.blit(ground, ground_rect_1)
@@ -90,8 +93,8 @@ while is_running:
         display.blit(foreground, (0, 250))
 
         # infinite scrolling platform
-        ground_rect_1.left-=5
-        ground_rect_2.left-=5
+        ground_rect_1.left-=speed
+        ground_rect_2.left-=speed
 
         if ground_rect_1.right<=800:
             ground_rect_2.left=ground_rect_1.right
@@ -115,3 +118,5 @@ while is_running:
 
         # ceiling frame rate
         clock.tick(60)
+
+pygame.quit()
