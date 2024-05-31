@@ -61,6 +61,7 @@ while is_running:
     if ground_rect_1.right<=800: ground_rect_2.left=ground_rect_1.right
     if ground_rect_2.right<=800: ground_rect_1.left=ground_rect_2.right
 
+    # collision
     if test_enemy_rect.colliderect(player_rect): collision_cnt+=1
     else: collision_cnt=0
 
