@@ -39,6 +39,8 @@ test_enemy_rect = test_enemy.get_rect(bottomleft=(700, 300))
 score = 0
 speed = 5
 
+died = pygame.image.load('media/cover2.jpg')
+
 # title screen
 def title_screen():
     print("Displaying title screen")
@@ -111,6 +113,7 @@ while is_running:
         # collision
         if test_enemy_rect.colliderect(player_rect):
             print("you died")
+            display.blit(died, (0,0))
             is_playing = False
 
         # update display
