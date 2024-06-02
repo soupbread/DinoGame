@@ -63,7 +63,7 @@ def restart():
     test_enemy_rect.bottomleft=(700, 300)
     ground_rect_1.bottomleft=(0,400)
     player_rect.bottomleft=(50, 300)
-    speed = 0
+    speed = 1
 
 while is_running:
     # check whether window has been closed
@@ -118,7 +118,7 @@ while is_running:
             display.blit(died, (0,0))
             is_playing = False
 
-        speed+=0.01
+        # speed+=0.01
 
         # update display
         pygame.display.update()
