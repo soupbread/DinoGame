@@ -106,9 +106,6 @@ while is_running:
             if e.type == pygame.KEYDOWN:
                 if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==300:
                     player_grav = -20
-                if e.key==pygame.K_DOWN or e.key==pygame.K_s:
-                    # player_crouch()
-                    pass
         else:
             if e.type == pygame.KEYDOWN and e.key==pygame.K_SPACE:
                 is_playing = True
@@ -125,7 +122,6 @@ while is_running:
                 # score
                 if score>high_score:
                     high_score=score
-                print("hi",high_score)
                 start_time = pygame.time.get_ticks()
     
     if is_playing:
@@ -155,7 +151,9 @@ while is_running:
 
         # player
         player_jump()
-        # player_crouch()
+        key = pygame.key.get_pressed()
+        if key[pygame.K_DOWN] or key[pygame.K_s]:
+            player_crouch()
         display.blit(player, player_rect)
 
         # enemy
