@@ -35,18 +35,20 @@ platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 DEFAULT_PLATFORM_SPEED = 5
 platform_speed = 5
 
+GROUND_Y = 300
+
 # foreground
 foreground = pygame.image.load('media/graphics/environment/foreground.png')
 
 # player
 player = pygame.image.load('media/graphics/characters/player/player.png')
-player_rect = player.get_rect(bottomleft=(50, 300))
+player_rect = player.get_rect(bottomleft=(50, GROUND_Y))
 
 player_grav = 0
 
 # enemies
 enemy_1 = pygame.image.load('media/graphics/characters/player/player.png')
-enemy_1_rect = enemy_1.get_rect(bottomleft=(800, 300))
+enemy_1_rect = enemy_1.get_rect(bottomleft=(800, GROUND_Y))
 
 # general variables
 # score
@@ -86,8 +88,8 @@ def player_jump():
 
     player_grav+=1
     player_rect.y+=player_grav
-    if player_rect.bottom>=300:
-        player_rect.bottom=300
+    if player_rect.bottom>=GROUND_Y:
+        player_rect.bottom=GROUND_Y
 
 def player_crouch():
     print("CROUCHING")
@@ -101,10 +103,10 @@ while is_running:
             is_running = False
         if is_playing:
             if e.type == pygame.MOUSEBUTTONDOWN:
-                if e.button==1 and player_rect.bottom==300:
+                if e.button==1 and player_rect.bottom==GROUND_Y:
                     player_grav=-20
             if e.type == pygame.KEYDOWN:
-                if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==300:
+                if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==GROUND_Y:
                     player_grav = -20
         else:
             if e.type == pygame.KEYDOWN and e.key==pygame.K_SPACE:
@@ -113,7 +115,7 @@ while is_running:
                 # rects
                 background_rect_1.bottomleft=(0,400)
                 platform_rect_1.bottomleft=(0, 400)
-                enemy_1_rect.bottomleft=(800,300)
+                enemy_1_rect.bottomleft=(800,GROUND_Y)
 
                 # speeds
                 background_speed = DEFAULT_BACKGROUND_SPEED
