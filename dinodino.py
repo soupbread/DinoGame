@@ -53,14 +53,15 @@ def title_screen():
 def display_score():
     global high_score
 
-    hi_sco_surf = test_font.render(str(high_score), False, (64,64,64))
-    hi_sco_rect = hi_sco_surf.get_rect(topleft = (25,25))
-    display.blit(hi_sco_surf, hi_sco_rect)
+    # hi_sco_surf = test_font.render(str(high_score), False, (64,64,64))
+    # hi_sco_rect = hi_sco_surf.get_rect(topleft = (25,25))
+    # display.blit(hi_sco_surf, hi_sco_rect)
     
-    time = pygame.time.get_ticks()-start_time
-    score_surface = test_font.render(str(time), False, (64,64,64))
+    current_time = pygame.time.get_ticks()-start_time
+    score_surface = test_font.render(str(current_time), False, (64,64,64))
     score_rect = score_surface.get_rect(topright = (775, 25))
     display.blit(score_surface, score_rect)
+    print(current_time)
 
 def player_jump():
     global player_grav
@@ -80,10 +81,8 @@ def restart():
     global start_time
     global high_score
     
-    if time>high_score:
-        high_score = time
-    print(high_score)
-    print(time)
+    # if time>high_score:
+    #     high_score = time
     test_enemy_rect.bottomleft=(700, 300)
     ground_rect_1.bottomleft=(0,400)
     player_rect.bottomleft=(50, 300)
@@ -112,10 +111,6 @@ while is_running:
                 restart()
     
     if is_playing:
-        key = pygame.key.get_pressed()
-        mouse = pygame.mouse.get_pressed()
-        if key[pygame.K_SPACE] or key[pygame.K_UP] or mouse==1:
-            print("jump key pressed")
 
         # all surfaces
         display.blit(background, (0,0))
@@ -141,6 +136,8 @@ while is_running:
         test_enemy_rect.left-=speed
         if test_enemy_rect.right<=0: test_enemy_rect.left=800
 
+        display_score()
+
         # collision
         if test_enemy_rect.colliderect(player_rect):
             print("you died")
@@ -148,8 +145,6 @@ while is_running:
             is_playing = False
 
         speed+=0.0001
-
-        display_score()
 
         # update display
         pygame.display.update()
