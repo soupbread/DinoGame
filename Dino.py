@@ -127,9 +127,8 @@ while is_running:
                     high_score=score
                 print("hi",high_score)
                 start_time = pygame.time.get_ticks()
+    
     if is_playing:
-        # update start time
-
         # background
         background_rect_1.left-=background_speed
         background_rect_2.left-=background_speed
