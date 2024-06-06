@@ -25,7 +25,7 @@ background = pygame.image.load('media/graphics/environment/sky.png')
 background_rect_1 = background.get_rect(bottomleft=(0,400))
 background_rect_2 = background.get_rect(bottomleft=background_rect_1.bottomright)
 
-DEFAULT_BACKGROUND_SPEED = 2
+DEFAULT_BACKGROUND_SPEED = 3
 background_speed = 2
 
 # platform
@@ -33,7 +33,7 @@ platform = pygame.image.load('media/graphics/environment/ground.png')
 platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
-DEFAULT_PLATFORM_SPEED = 5
+DEFAULT_PLATFORM_SPEED = 6
 platform_speed = 5
 
 GROUND_Y = 300
@@ -54,6 +54,8 @@ player_surf = pygame.image.load('media/graphics/characters/player/player.png')
 player_rect = player_surf.get_rect(bottomleft=(50, GROUND_Y))
 
 player_grav = 0
+PLAYER_MAX_GRAV = -20
+PLAYER_DEF_GRAV = -17
 
 # enemies
 enemy_1 = pygame.image.load('media/graphics/characters/player/player.png')
@@ -67,9 +69,10 @@ enemies_list = []
 score = 0
 high_score = 0
 
-start_time = pygame.time.get_ticks()
 enemy_timer = pygame.USEREVENT+1
 pygame.time.set_timer(enemy_timer,1500)
+
+start_time = pygame.time.get_ticks()
 
 # # display functions
 # def display_menu():
@@ -85,11 +88,11 @@ pygame.time.set_timer(enemy_timer,1500)
 def display_score():
     global score
     global high_score
-
-    score = pygame.time.get_ticks()-start_time
+    
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
+    score = pygame.time.get_ticks()-start_time
 
     hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
@@ -152,10 +155,10 @@ while is_running:
                     enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-100)))
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button==1 and player_rect.bottom==GROUND_Y:
-                    player_grav=-20
+                    player_grav=PLAYER_DEF_GRAV
             if e.type == pygame.KEYDOWN:
                 if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==GROUND_Y:
-                    player_grav = -20
+                    player_grav = PLAYER_DEF_GRAV
         else:
             if e.type == pygame.KEYDOWN and e.key==pygame.K_SPACE:
                 is_playing = True
@@ -163,7 +166,8 @@ while is_running:
                 # rects
                 background_rect_1.bottomleft=(0,400)
                 platform_rect_1.bottomleft=(0, 400)
-                enemy_1_rect.bottomleft=(800,GROUND_Y)
+                player_rect.bottomleft = (50, GROUND_Y)
+                enemies_list=[]
 
                 # speeds
                 background_speed = DEFAULT_BACKGROUND_SPEED
@@ -205,6 +209,11 @@ while is_running:
         if key[pygame.K_DOWN] or key[pygame.K_s]:
             # player_crouching()
             print("crouching")
+        if key[pygame.K_SPACE] or key[pygame.K_w]:
+            if player_grav<=0 and player_grav>PLAYER_MAX_GRAV-player_grav and player_rect.y>80:
+                player_grav-=2
+            if player_rect.bottom==GROUND_Y:
+                player_grav=PLAYER_DEF_GRAV
         display.blit(player_surf, player_rect)
 
         # enemy
@@ -226,12 +235,13 @@ while is_running:
 
         is_playing = check_collision(player_rect, enemies_list)
 
-        # update display
-        pygame.display.update()
-
-        # ceiling frame rate
-        clock.tick(60)
     else:
-        print("you died") # how to make it so press space to restart
+        display.fill("black")
+    
+        # update display
+    pygame.display.update()
+
+    # ceiling frame rate
+    clock.tick(60)
 
 pygame.quit()
