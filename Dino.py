@@ -72,6 +72,8 @@ high_score = 0
 enemy_timer = pygame.USEREVENT+1
 pygame.time.set_timer(enemy_timer,1500)
 
+continue_jump = True
+
 start_time = pygame.time.get_ticks()
 
 # # display functions
@@ -159,6 +161,9 @@ while is_running:
             if e.type == pygame.KEYDOWN:
                 if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==GROUND_Y:
                     player_grav = PLAYER_DEF_GRAV
+                    continue_jump=True
+            if e.type == pygame.KEYUP:
+                continue_jump=False
         else:
             if e.type == pygame.KEYDOWN and e.key==pygame.K_SPACE:
                 is_playing = True
@@ -211,7 +216,7 @@ while is_running:
             # player_crouching()
             print("crouching")
         if key[pygame.K_SPACE] or key[pygame.K_w] or mouse==(True, False, False):
-            if player_grav<=0 and player_grav>PLAYER_MAX_GRAV-player_grav and player_rect.y>80:
+            if player_grav<=0 and player_grav>PLAYER_MAX_GRAV-player_grav and player_rect.y>80 and continue_jump:
                 player_grav-=2
             if player_rect.bottom==GROUND_Y:
                 player_grav=PLAYER_DEF_GRAV
