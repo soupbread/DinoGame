@@ -12,6 +12,7 @@ pygame.display.set_icon(pygame.image.load('media/dino.png'))
 
 # font
 font = pygame.font.Font('media/font/GOUDYSTO.TTF')
+font_large = pygame.font.Font("media/font/GOUDYSTO.TTF", 60)
 
 # time
 clock = pygame.time.Clock()
@@ -64,6 +65,10 @@ enemy_1_rect = enemy_1.get_rect(bottomleft=(800, GROUND_Y))
 enemy_2 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
 enemies_list = []
 
+# victory screen (99999)
+victory_surf = font_large.render("YOU WIN!", False, (64,64,64))
+victory_rect = victory_surf.get_rect(center=(400,200))
+
 # general variables
 # score
 score = 0
@@ -90,11 +95,14 @@ start_time = pygame.time.get_ticks()
 def display_score():
     global score
     global high_score
+    global is_playing
     
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
-    score = pygame.time.get_ticks()-start_time
+    score = (pygame.time.get_ticks()-start_time)//100+99970
+    if score>99999:
+        is_playing=False
 
     hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
@@ -179,8 +187,10 @@ while is_running:
                 platform_speed = DEFAULT_PLATFORM_SPEED
 
                 # score
-                if score>high_score:
+                if score>high_score and score!=100000:
                     high_score=score
+                elif score==100000:
+                    high_score=99999
                 start_time = pygame.time.get_ticks()
     
     if is_playing:
@@ -232,15 +242,16 @@ while is_running:
         # foreground
         display.blit(foreground, (0, 250))
 
+        is_playing = check_collision(player_rect, enemies_list)
+
         # score
         display_score()
 
         # speed update
         background_speed+=0.0001
         platform_speed+=0.0001
-
-        is_playing = check_collision(player_rect, enemies_list)
-
+    elif score>=99999:
+        display.blit(victory_surf, victory_rect)
     else:
         display.fill("black")
     
