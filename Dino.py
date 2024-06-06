@@ -34,7 +34,8 @@ platform = pygame.image.load('media/graphics/environment/ground.png')
 platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
-DEFAULT_PLATFORM_SPEED = 6
+DEFAULT_PLATFORM_SPEED = 5
+# MAX_PLATFORM_SPEED =  
 platform_speed = 5
 
 GROUND_Y = 300
@@ -254,8 +255,8 @@ while is_running:
         display_score()
 
         # speed update
-        background_speed+=0.0001
-        platform_speed+=0.0001
+        background_speed+=0.001
+        platform_speed+=0.001
     elif score>=99999:
         display.blit(victory_surf, victory_rect)
     else:
