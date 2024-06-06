@@ -60,9 +60,9 @@ PLAYER_DEF_GRAV = -17
 
 # enemies
 enemy_1 = pygame.image.load('media/graphics/characters/player/player.png')
-enemy_1_rect = enemy_1.get_rect(bottomleft=(800, GROUND_Y))
-
 enemy_2 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
+enemy_3 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
+
 enemies_list = []
 
 # victory screen (99999)
@@ -78,6 +78,7 @@ enemy_timer = pygame.USEREVENT+1
 pygame.time.set_timer(enemy_timer,1500)
 
 continue_jump = True
+third_enemy = 1
 
 start_time = pygame.time.get_ticks()
 
@@ -100,7 +101,7 @@ def display_score():
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
-    score = (pygame.time.get_ticks()-start_time)//100+99970
+    score = (pygame.time.get_ticks()-start_time)//100
     if score>99999:
         is_playing=False
 
@@ -132,7 +133,9 @@ def enemy_movement(enemies_list):
         for enemy in enemies_list:
             enemy.x-=platform_speed
 
-            if enemy.bottom == GROUND_Y:
+            if enemy.bottom == GROUND_Y-1:
+                display.blit(enemy_3, enemy)
+            elif enemy.bottom==GROUND_Y:
                 display.blit(enemy_1, enemy)
             else:
                 display.blit(enemy_2, enemy)
@@ -159,7 +162,10 @@ while is_running:
             is_running = False
         if is_playing:
             if e.type == enemy_timer:
-                if random.randint(0,2):
+                third_enemy = random.randint(0,5)
+                if third_enemy==0:
+                        enemies_list.append(enemy_3.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-1)))
+                elif random.randint(0,1):
                     enemies_list.append(enemy_1.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y)))
                 else:
                     enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-100)))
