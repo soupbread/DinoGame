@@ -206,10 +206,11 @@ while is_running:
         # player
         player_jump()
         key = pygame.key.get_pressed()
+        mouse = pygame.mouse.get_pressed()
         if key[pygame.K_DOWN] or key[pygame.K_s]:
             # player_crouching()
             print("crouching")
-        if key[pygame.K_SPACE] or key[pygame.K_w]:
+        if key[pygame.K_SPACE] or key[pygame.K_w] or mouse==(True, False, False):
             if player_grav<=0 and player_grav>PLAYER_MAX_GRAV-player_grav and player_rect.y>80:
                 player_grav-=2
             if player_rect.bottom==GROUND_Y:
