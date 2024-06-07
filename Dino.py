@@ -66,7 +66,7 @@ enemy_3 = pygame.image.load('media/graphics/characters/player/player_walk_2.png'
 
 enemies_list = []
 
-# victory screen (99999)
+# victory screen (9999)
 victory_surf = font_large.render("YOU WIN!", False, (64,64,64))
 victory_rect = victory_surf.get_rect(center=(400,200))
 
@@ -103,7 +103,7 @@ def display_score():
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
     score = (pygame.time.get_ticks()-start_time)//100
-    if score>99999:
+    if score>9999:
         is_playing=False
 
     hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
@@ -164,16 +164,16 @@ while is_running:
         if is_playing:
             if e.type == enemy_timer:
                 third_enemy = random.randint(0,5)
-                print(third_enemy)
+                # print(third_enemy)
                 if third_enemy==0:
                         enemies_list.append(enemy_3.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-1)))
                 elif random.randint(0,1):
                     enemies_list.append(enemy_1.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y)))
                 elif third_enemy==1 or third_enemy==2 or third_enemy==3:
-                        print("spawned midair")
+                        # print("spawned midair")
                         enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-100)))
                 elif third_enemy==4 or third_enemy==5:
-                        print("spawned near ground")
+                        # print("spawned near ground")
                         enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-30)))
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button==1 and player_rect.bottom==GROUND_Y:
@@ -201,8 +201,8 @@ while is_running:
                 # score
                 if score>high_score and score!=100000:
                     high_score=score
-                elif score==100000:
-                    high_score=99999
+                elif score==10000:
+                    high_score=9999
                 start_time = pygame.time.get_ticks()
     
     if is_playing:
@@ -260,8 +260,9 @@ while is_running:
         display_score()
 
         # speed update
-        background_speed+=0.003
-        platform_speed+=0.003
+        if platform_speed<MAX_PLATFORM_SPEED:
+            background_speed+=0.003
+            platform_speed+=0.003
     elif score>=99999:
         display.blit(victory_surf, victory_rect)
     else:
