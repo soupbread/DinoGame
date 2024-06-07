@@ -60,9 +60,9 @@ PLAYER_MAX_GRAV = -20
 PLAYER_DEF_GRAV = -17
 
 # enemies
-enemy_1 = pygame.image.load('media/graphics/characters/player/player.png')
-enemy_2 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
-enemy_3 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
+enemy_1 = pygame.image.load('media/graphics/characters/player/player.png') # on ground
+enemy_2 = pygame.image.load('media/graphics/characters/player/player_walk_1.png') # random position
+enemy_3 = pygame.image.load('media/graphics/characters/player/player_walk_2.png') # on ground
 
 enemies_list = []
 
@@ -164,12 +164,17 @@ while is_running:
         if is_playing:
             if e.type == enemy_timer:
                 third_enemy = random.randint(0,5)
+                print(third_enemy)
                 if third_enemy==0:
                         enemies_list.append(enemy_3.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-1)))
                 elif random.randint(0,1):
                     enemies_list.append(enemy_1.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y)))
-                else:
-                    enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-100)))
+                elif third_enemy==1 or third_enemy==2 or third_enemy==3:
+                        print("spawned midair")
+                        enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-100)))
+                elif third_enemy==4 or third_enemy==5:
+                        print("spawned near ground")
+                        enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-30)))
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button==1 and player_rect.bottom==GROUND_Y:
                     player_grav=PLAYER_DEF_GRAV
