@@ -1,6 +1,10 @@
 import pygame
 import random
 
+# leaderboard
+# splatoon
+# attack enemy
+
 pygame.init()
 
 is_running = True
