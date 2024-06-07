@@ -35,7 +35,7 @@ platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
 DEFAULT_PLATFORM_SPEED = 6
-MAX_PLATFORM_SPEED =  25
+MAX_PLATFORM_SPEED =  20
 platform_speed = DEFAULT_PLATFORM_SPEED
 
 GROUND_Y = 300
@@ -83,9 +83,14 @@ third_enemy = 1
 
 start_time = pygame.time.get_ticks()
 
-# # display functions
-# def display_menu():
-#     print("Displaying title screen")
+first_run = True
+
+# display functions
+def display_menu():
+    display.fill("blue")
+    title = font.render("Dino Game", False, (64,64,64))
+    title_rect = title.get_rect(center=(400,200))
+    display.blit(title, title_rect)
 
 # def display_controls():
 #     print("Displaying instructions")
@@ -206,6 +211,9 @@ while is_running:
                 start_time = pygame.time.get_ticks()
     
     if is_playing:
+        # if first_run:
+        #     display_menu()
+
         # background
         background_rect_1.left-=background_speed
         background_rect_2.left-=background_speed
