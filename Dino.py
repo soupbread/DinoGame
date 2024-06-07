@@ -152,7 +152,6 @@ def player_jump():
     global player_rect
     
     player_grav+=1
-    print(player_grav)
     player_rect.y+=player_grav
     if player_rect.bottom>=GROUND_Y:
         player_rect.bottom=GROUND_Y
