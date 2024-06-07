@@ -55,7 +55,7 @@ player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_
 player_in = 0
 player_jumping = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
 
-player_crouch = pygame.image.load('media/graphics/characters/player/player_crouch.png')
+player_crouch = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
 
 player_walk = [player_walk_1, player_crouch]
 
@@ -150,8 +150,9 @@ def display_score():
 def player_jump():
     global player_grav
     global player_rect
-
+    
     player_grav+=1
+    print(player_grav)
     player_rect.y+=player_grav
     if player_rect.bottom>=GROUND_Y:
         player_rect.bottom=GROUND_Y
@@ -165,16 +166,20 @@ def player_animation():
         player_in += 0.1
         if int(player_in) >= len(player_walk):
             player_in=0
-        print(int(player_in))
         player_surf = player_walk[(int(player_in))]
 
 
 
 # no more than 5% of code longer than 80 columns
 
-# def player_crouching():
-#     global player_rect
-#     global player_crouched
+def player_crouching():
+    global player_rect, player_surf, player_grav
+
+    if player_rect.bottom<300:
+        player_grav+=4
+    else:
+        player_surf = player_crouch
+        player_rect = player_surf.get_rect(bottomleft = (50, GROUND_Y))
 
 #     player_rect = player_crouched.get_rect(bottomleft = (50,300))
 
@@ -302,14 +307,14 @@ while is_running:
         key = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
         if key[pygame.K_DOWN] or key[pygame.K_s]:
-            # player_crouching()
-            print("crouching")
+            player_crouching()
+        else:
+            player_animation()
         if key[pygame.K_SPACE] or key[pygame.K_w] or mouse==(True, False, False):
             if player_grav<=0 and player_grav>PLAYER_MAX_GRAV-player_grav and player_rect.y>90 and continue_jump:
                 player_grav-=2
             if player_rect.bottom==GROUND_Y:
                 player_grav=PLAYER_DEF_GRAV
-        player_animation()
         display.blit(player_surf, player_rect)
 
         # enemy
