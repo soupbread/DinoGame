@@ -51,12 +51,16 @@ foreground = pygame.image.load('media/graphics/environment/foreground.png')
 player_walk_1 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
 player_walk_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
 player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
-player_walk_4 = pygame.image.load('media/graphics/characters/player/player_walk_4.png')
-player_walk = [player_walk_1,player_walk_2, player_walk_3, player_walk_4]
+
+player_in = 0
+player_jumping = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
 
 player_crouch = pygame.image.load('media/graphics/characters/player/player_crouch.png')
 
-player_surf = pygame.image.load('media/graphics/characters/player/player.png')
+player_walk = [player_walk_1, player_crouch]
+
+# player_surf = pygame.image.load('media/graphics/characters/player/player.png')
+player_surf = player_walk[player_in]
 player_rect = player_surf.get_rect(bottomleft=(50, GROUND_Y))
 
 player_grav = 0
@@ -67,6 +71,21 @@ PLAYER_DEF_GRAV = -17
 enemy_1 = pygame.image.load('media/graphics/characters/player/player.png') # on ground
 enemy_2 = pygame.image.load('media/graphics/characters/player/player_walk_1.png') # random position
 enemy_3 = pygame.image.load('media/graphics/characters/player/player_walk_2.png') # on ground
+
+enemy_1_1 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
+enemy_1_2 = pygame.image.load('media/graphics/characters/player/player.png')
+enemy_1_in = 0
+enemy_1_frames = [enemy_1_1, enemy_1_2]
+
+enemy_2_1 = pygame.image.load('media/graphics/characters/player/player.png')
+enemy_2_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
+enemy_2_in = 0
+enemy_2_frames = [enemy_2_1, enemy_2_2]
+
+enemy_3_1 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
+enemy_3_2 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
+enemy_3_in = 0
+enemy_3_frames = [enemy_3_1, enemy_3_2]
 
 enemies_list = []
 
@@ -86,6 +105,14 @@ continue_jump = True
 third_enemy = 1
 
 start_time = pygame.time.get_ticks()
+enemy_1_anim = pygame.USEREVENT+2
+pygame.time.set_timer(enemy_1_anim, 500)
+
+enemy_2_anim = pygame.USEREVENT+3
+pygame.time.set_timer(enemy_2_anim, 500)
+
+enemy_3_anim = pygame.USEREVENT+4
+pygame.time.set_timer(enemy_3_anim, 500)
 
 first_run = True
 
@@ -128,6 +155,22 @@ def player_jump():
     player_rect.y+=player_grav
     if player_rect.bottom>=GROUND_Y:
         player_rect.bottom=GROUND_Y
+
+def player_animation():
+    global player_surf, player_in
+    
+    if player_rect.bottom<GROUND_Y:
+       player_surf = player_jumping
+    else:
+        player_in += 0.1
+        if int(player_in) >= len(player_walk):
+            player_in=0
+        print(int(player_in))
+        player_surf = player_walk[(int(player_in))]
+
+
+
+# no more than 5% of code longer than 80 columns
 
 # def player_crouching():
 #     global player_rect
@@ -184,6 +227,18 @@ while is_running:
                 elif third_enemy==4 or third_enemy==5:
                         # print("spawned near ground")
                         enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-30)))
+            if e.type == enemy_1_anim:
+                if enemy_1_in==0: enemy_1_in=1
+                else: enemy_1_in = 0
+                enemy_1 = enemy_1_frames[enemy_1_in]
+            if e.type == enemy_2_anim:
+                if enemy_2_in==0: enemy_2_in=1
+                else: enemy_2_in = 0
+                enemy_2 = enemy_2_frames[enemy_2_in]
+            if e.type == enemy_3_anim:
+                if enemy_3_in==0: enemy_3_in=1
+                else: enemy_3_in = 0
+                enemy_3 = enemy_3_frames[enemy_3_in]
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button==1 and player_rect.bottom==GROUND_Y:
                     player_grav=PLAYER_DEF_GRAV
@@ -254,6 +309,7 @@ while is_running:
                 player_grav-=2
             if player_rect.bottom==GROUND_Y:
                 player_grav=PLAYER_DEF_GRAV
+        player_animation()
         display.blit(player_surf, player_rect)
 
         # enemy
