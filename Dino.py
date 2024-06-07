@@ -26,17 +26,17 @@ background = pygame.image.load('media/graphics/environment/sky.png')
 background_rect_1 = background.get_rect(bottomleft=(0,400))
 background_rect_2 = background.get_rect(bottomleft=background_rect_1.bottomright)
 
-DEFAULT_BACKGROUND_SPEED = 3
-background_speed = 2
+DEFAULT_BACKGROUND_SPEED = 4
+background_speed = DEFAULT_BACKGROUND_SPEED
 
 # platform
 platform = pygame.image.load('media/graphics/environment/ground.png')
 platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
-DEFAULT_PLATFORM_SPEED = 5
+DEFAULT_PLATFORM_SPEED = 6
 # MAX_PLATFORM_SPEED =  
-platform_speed = 5
+platform_speed = DEFAULT_PLATFORM_SPEED
 
 GROUND_Y = 300
 
