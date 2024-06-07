@@ -35,7 +35,7 @@ platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
 DEFAULT_PLATFORM_SPEED = 6
-# MAX_PLATFORM_SPEED =  
+MAX_PLATFORM_SPEED =  25
 platform_speed = DEFAULT_PLATFORM_SPEED
 
 GROUND_Y = 300
@@ -260,8 +260,8 @@ while is_running:
         display_score()
 
         # speed update
-        background_speed+=0.001
-        platform_speed+=0.001
+        background_speed+=0.003
+        platform_speed+=0.003
     elif score>=99999:
         display.blit(victory_surf, victory_rect)
     else:
