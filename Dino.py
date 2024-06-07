@@ -114,11 +114,11 @@ pygame.time.set_timer(enemy_2_anim, 500)
 enemy_3_anim = pygame.USEREVENT+4
 pygame.time.set_timer(enemy_3_anim, 500)
 
-first_run = True
+show_menu = True
 
 # display functions
 def display_menu():
-    display.fill("blue")
+    display.fill("yellow")
     title = font.render("Dino Game", False, (64,64,64))
     title_rect = title.get_rect(center=(400,200))
     display.blit(title, title_rect)
@@ -274,8 +274,6 @@ while is_running:
                 start_time = pygame.time.get_ticks()
     
     if is_playing:
-        # if first_run:
-        #     display_menu()
 
         # background
         background_rect_1.left-=background_speed
