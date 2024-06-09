@@ -145,7 +145,7 @@ def display_menu():
 #     # movement: w, s / up, down arrows / space, mouse left button (jump only)
 
 def display_death_screen():
-    global menu_button_rect
+    global menu_button_rect, file
 
     display.fill("seagreen4")
     died_surf = font.render("You died! Press space to restart", True, (0,0,0))
@@ -290,10 +290,10 @@ while is_running:
                     if button_rect.collidepoint(mouse_x, mouse_y):
                         print("start game")
                         is_playing=True
-                    if text_box_rect.collidepoint(mouse_x, mouse_y):
+                    if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active:
                         print("text box activated")
                         text_box_active = True
-                    if not text_box_rect.collidepoint(mouse_x, mouse_y):
+                    if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active:
                         print("text box deactivated")
                         text_box_active = False
                 else:
@@ -311,22 +311,50 @@ while is_running:
                         name+=e.unicode
                 elif e.key==pygame.K_SPACE:
                     is_playing = True
-                # rects
-                background_rect_1.bottomleft=(0,400)
-                platform_rect_1.bottomleft=(0, 400)
-                player_rect.bottomleft = (50, GROUND_Y)
-                enemies_list=[]
 
-                # speeds
-                background_speed = DEFAULT_BACKGROUND_SPEED
-                platform_speed = DEFAULT_PLATFORM_SPEED
+                    # rects
+                    background_rect_1.bottomleft=(0,400)
+                    platform_rect_1.bottomleft=(0, 400)
+                    player_rect.bottomleft = (50, GROUND_Y)
+                    enemies_list=[]
 
-                # score
-                if score>high_score and score!=100000:
-                    high_score=score
-                elif score==10000:
-                    high_score=9999
-                start_time = pygame.time.get_ticks()
+                    # speeds
+                    background_speed = DEFAULT_BACKGROUND_SPEED
+                    platform_speed = DEFAULT_PLATFORM_SPEED
+
+                    # write score
+                    if score>high_score and score!=100000:
+                        high_score=score
+                    elif score==10000:
+                        high_score=9999
+                    
+                    with open('all_player_data/all_players.txt', 'r') as f:
+                        all_data = f.read()
+                    if name in all_data:
+                        ind = all_data.find(name)
+                        if high_score>int(all_data[ind-6:ind-2]):
+                            if high_score<10:
+                                all_data = all_data.replace(all_data[ind-6:ind-2], "000"+str(high_score))
+                            elif high_score<100:
+                                all_data = all_data.replace(all_data[ind-6:ind-2], "00"+str(high_score))
+                            elif high_score<1000:
+                                all_data = all_data.replace(all_data[ind-6:ind-2], "0"+str(high_score))
+                            else:
+                                all_data = all_data.replace(all_data[ind-6:ind-2], high_score)
+                            with open('all_player_data/all_players.txt', 'w') as f:
+                                f.write(all_data)
+                    else:
+                        with open('all_player_data/all_players.txt', 'a') as f:
+                            if high_score<10:
+                                f.write(f"000{high_score}, {name}\n")
+                            elif high_score<100:
+                                f.write(f"00{high_score}, {name}\n")
+                            elif high_score<1000:
+                                f.write(f"0{high_score}, {name}\n")
+                            else:
+                                f.write(f"{high_score}, {name}\n")
+
+                    start_time = pygame.time.get_ticks()
 
     if is_playing:
         show_menu=False
@@ -393,6 +421,7 @@ while is_running:
         display.blit(victory_surf, victory_rect)
     elif show_menu:
         display_menu()
+        start_time = pygame.time.get_ticks()
     else:
         display_death_screen()
     
