@@ -8,7 +8,7 @@ import random
 pygame.init()
 
 is_running = True
-is_playing = True
+is_playing = False
 
 # window
 pygame.display.set_caption("Dino")
@@ -116,12 +116,29 @@ pygame.time.set_timer(enemy_3_anim, 500)
 
 show_menu = True
 
+text_box_active = False
+
+name = ""
+
+button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
+button_rect = button_surf.get_rect(center=(400,300))
+
+text_box_surf = pygame.image.load('media\graphics\characters\player\player.png')
+text_box_rect = text_box_surf.get_rect(center=(400,200))
+
 # display functions
 def display_menu():
     display.fill("yellow")
-    title = font.render("Dino Game", False, (64,64,64))
-    title_rect = title.get_rect(center=(400,200))
+    title = font.render("Dino Game", True, (22, 36, 16))
+    title_rect = title.get_rect(center=(400,100))
+    display.fill("seagreen4")
     display.blit(title, title_rect)
+    display.blit(button_surf, button_rect)
+    display.blit(text_box_surf,text_box_rect)
+    
+    text_box = font.render(name, True, (22, 0, 16))
+    text_rect = text_box.get_rect(topleft=(200,200))
+    display.blit(text_box, text_rect)
 
 # def display_controls():
 #     print("Displaying instructions")
@@ -145,6 +162,9 @@ def display_score():
     hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
     display.blit(hi_score_surf, hi_score_rect)
+
+def display_tutorial():
+    print("hihi")
 
 # player functions
 def player_jump():
@@ -213,6 +233,9 @@ def check_collision(player, enemies):
 # main loop
 while is_running:
     # check inputs
+
+    mouse_x, mouse_y = pygame.mouse.get_pos()
+
     for e in pygame.event.get():
         if e.type == pygame.QUIT:
             is_playing = False
@@ -253,9 +276,23 @@ while is_running:
             if e.type == pygame.KEYUP:
                 continue_jump=False
         else:
-            if e.type == pygame.KEYDOWN and e.key==pygame.K_SPACE:
-                is_playing = True
-            
+            if e.type == pygame.MOUSEBUTTONUP and show_menu:
+                if button_rect.collidepoint(mouse_x, mouse_y):
+                    print("start game")
+                    is_playing=True
+                if text_box_rect.collidepoint(mouse_x, mouse_y):
+                    print("text box activated")
+                    text_box_active = True
+            if e.type == pygame.KEYDOWN:
+                if text_box_active == True:
+                    if e.key == pygame.K_RETURN:
+                        text_box_active = False
+                    elif e.key == pygame.K_BACKSPACE:
+                        name = name[:-1]
+                    else:
+                        name+=e.unicode
+                elif e.key==pygame.K_SPACE:
+                    is_playing = True
                 # rects
                 background_rect_1.bottomleft=(0,400)
                 platform_rect_1.bottomleft=(0, 400)
@@ -272,8 +309,9 @@ while is_running:
                 elif score==10000:
                     high_score=9999
                 start_time = pygame.time.get_ticks()
-    
+
     if is_playing:
+        show_menu=False
 
         # background
         background_rect_1.left-=background_speed
@@ -335,10 +373,12 @@ while is_running:
             platform_speed+=0.003
     elif score>=99999:
         display.blit(victory_surf, victory_rect)
+    elif show_menu:
+        display_menu()
     else:
         display.fill("black")
     
-        # update display
+    # update display
     pygame.display.update()
 
     # ceiling frame rate
