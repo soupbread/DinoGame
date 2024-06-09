@@ -144,8 +144,16 @@ def display_menu():
 #     print("Displaying instructions")
 #     # movement: w, s / up, down arrows / space, mouse left button (jump only)
 
-# def display_death_screen():
-#     print("displaying death screen")
+def display_death_screen():
+    global menu_button_rect
+
+    display.fill("seagreen4")
+    died_surf = font.render("You died! Press space to restart", True, (0,0,0))
+    died_rect = died_surf.get_rect(center=(400,200))
+    menu_button_surf = pygame.image.load('media\graphics\characters\player\player_walk_3.png')
+    menu_button_rect = menu_button_surf.get_rect(center=(400,300))
+    display.blit(died_surf, died_rect)
+    display.blit(menu_button_surf, menu_button_rect)
 
 def display_score():
     global score
@@ -269,6 +277,7 @@ while is_running:
             if e.type == pygame.MOUSEBUTTONDOWN:
                 if e.button==1 and player_rect.bottom==GROUND_Y:
                     player_grav=PLAYER_DEF_GRAV
+                    continue_jump=True
             if e.type == pygame.KEYDOWN:
                 if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==GROUND_Y:
                     player_grav = PLAYER_DEF_GRAV
@@ -276,17 +285,26 @@ while is_running:
             if e.type == pygame.KEYUP:
                 continue_jump=False
         else:
-            if e.type == pygame.MOUSEBUTTONUP and show_menu:
-                if button_rect.collidepoint(mouse_x, mouse_y):
-                    print("start game")
-                    is_playing=True
-                if text_box_rect.collidepoint(mouse_x, mouse_y):
-                    print("text box activated")
-                    text_box_active = True
+            if e.type == pygame.MOUSEBUTTONUP:
+                if show_menu:
+                    if button_rect.collidepoint(mouse_x, mouse_y):
+                        print("start game")
+                        is_playing=True
+                    if text_box_rect.collidepoint(mouse_x, mouse_y):
+                        print("text box activated")
+                        text_box_active = True
+                    if not text_box_rect.collidepoint(mouse_x, mouse_y):
+                        print("text box deactivated")
+                        text_box_active = False
+                else:
+                    if menu_button_rect.collidepoint(mouse_x, mouse_y):
+                        print("return to menu")
+                        show_menu = True
             if e.type == pygame.KEYDOWN:
                 if text_box_active == True:
                     if e.key == pygame.K_RETURN:
                         text_box_active = False
+                        print("text box deactivated")
                     elif e.key == pygame.K_BACKSPACE:
                         name = name[:-1]
                     else:
@@ -376,7 +394,7 @@ while is_running:
     elif show_menu:
         display_menu()
     else:
-        display.fill("black")
+        display_death_screen()
     
     # update display
     pygame.display.update()
