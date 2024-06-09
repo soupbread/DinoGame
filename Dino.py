@@ -171,6 +171,9 @@ def display_score():
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
     display.blit(hi_score_surf, hi_score_rect)
 
+def get_score(line):
+    return int(line.split(',')[0])
+
 def display_tutorial():
     print("hihi")
 
@@ -327,33 +330,25 @@ while is_running:
                         high_score=score
                     elif score==10000:
                         high_score=9999
+
+                    supp = "0"
                     
-                    with open('all_player_data/all_players.txt', 'r') as f:
+                    with open('all_player_data\leaderboard.txt', 'r') as f:
                         all_data = f.read()
                     if name in all_data:
                         ind = all_data.find(name)
                         if high_score>int(all_data[ind-6:ind-2]):
-                            if high_score<10:
-                                all_data = all_data.replace(all_data[ind-6:ind-2], "000"+str(high_score))
-                            elif high_score<100:
-                                all_data = all_data.replace(all_data[ind-6:ind-2], "00"+str(high_score))
-                            elif high_score<1000:
-                                all_data = all_data.replace(all_data[ind-6:ind-2], "0"+str(high_score))
-                            else:
-                                all_data = all_data.replace(all_data[ind-6:ind-2], high_score)
-                            with open('all_player_data/all_players.txt', 'w') as f:
+                            all_data = all_data.replace(all_data[ind-6:ind-2], supp*(4-len(str(high_score)))+str(high_score))
+                            with open('all_player_data\leaderboard.txt', 'w') as f:
                                 f.write(all_data)
                     else:
-                        with open('all_player_data/all_players.txt', 'a') as f:
-                            if high_score<10:
-                                f.write(f"000{high_score}, {name}\n")
-                            elif high_score<100:
-                                f.write(f"00{high_score}, {name}\n")
-                            elif high_score<1000:
-                                f.write(f"0{high_score}, {name}\n")
-                            else:
-                                f.write(f"{high_score}, {name}\n")
-
+                        with open('all_player_data\leaderboard.txt', 'a') as f:
+                            f.write(supp*(4-len(str(high_score)))+f"{high_score}, {name}\n")
+                    with open('all_player_data\leaderboard.txt', 'r') as f:
+                        lines = f.readlines()
+                    lines.sort(key=get_score, reverse=True)
+                    with open('all_player_data\leaderboard.txt', 'w') as f:
+                        f.writelines(lines)
                     start_time = pygame.time.get_ticks()
 
     if is_playing:
