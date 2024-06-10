@@ -1,7 +1,6 @@
 import pygame
 import random
 
-# leaderboard
 # splatoon
 # attack enemy
 
@@ -317,8 +316,7 @@ while is_running:
         else:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
-                    if button_rect.collidepoint(mouse_x, mouse_y):
-                        print('collide')
+                    if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
                         print("start game")
                         is_playing=True
                     if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active:
@@ -327,7 +325,7 @@ while is_running:
                     if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active:
                         print("text box deactivated")
                         text_box_active = False
-                    if leaderboard_button_rect.collidepoint(mouse_x, mouse_y):
+                    if leaderboard_button_rect.collidepoint(mouse_x, mouse_y) and show_menu:
                         print('display leaderboard')
                         show_leaderboard=True
                     if show_leaderboard and to_m_button_rect.collidepoint(mouse_x, mouse_y):
@@ -386,7 +384,7 @@ while is_running:
                     lines.sort(key=get_score, reverse=True)
                     with open('all_player_data\leaderboard.txt', 'w') as f:
                         f.writelines(lines)
-                    with open('all_player_data/top-10.txt', 'w') as f:
+                    with open('all_player_data\\top-10.txt', 'w') as f:
                         f.writelines(lines[:10])
                     start_time = pygame.time.get_ticks()
 
