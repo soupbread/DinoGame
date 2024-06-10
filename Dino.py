@@ -363,8 +363,9 @@ while is_running:
                     if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
                         with open('all_player_data/leaderboard.txt', 'r') as f:
                             all_data = f.read()
-                        ind = all_data.find(name)
-                        high_score = int(all_data[ind-6:ind-2])
+                        if name in all_data:
+                            ind = all_data.find(name)
+                            high_score = int(all_data[ind-6:ind-2])
                         print("start game")
                         is_playing=True
                     if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active:
