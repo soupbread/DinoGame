@@ -288,9 +288,6 @@ def refresh():
         high_score=9999
 
     supp = "0"
-
-    if name=="":
-        name = "Guest"
     
     with open('all_player_data\leaderboard.txt', 'r') as f:
         all_data = f.read()
@@ -363,6 +360,8 @@ while is_running:
                     if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
                         with open('all_player_data/leaderboard.txt', 'r') as f:
                             all_data = f.read()
+                        if name=="":
+                            name = "Guest"
                         if name in all_data:
                             ind = all_data.find(name)
                             high_score = int(all_data[ind-6:ind-2])
