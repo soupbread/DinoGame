@@ -6,6 +6,9 @@
 1234, Not a Gamer
 1111, Hoho
 0210, Hi
+0175, Guest
+0175, Mika
+0141, Katie
 0127, Name
 0094, Jon
 0079, John Doe
@@ -13,6 +16,5 @@
 0066, Nomnom
 0060, Timmy
 0060, Test
+0059, Som
 0047, Turtle
-0037, Som
-0034, Katie

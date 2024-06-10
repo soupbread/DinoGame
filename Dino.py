@@ -266,6 +266,50 @@ def check_collision(player, enemies):
                 return False
     return True
 
+def refresh():
+    global background_rect_1, platform_rect_1, player_rect
+    global enemies_list, background_speed, platform_speed
+    global score, high_score, name
+
+    # rects
+    background_rect_1.bottomleft=(0,400)
+    platform_rect_1.bottomleft=(0, 400)
+    player_rect.bottomleft = (50, GROUND_Y)
+    enemies_list=[]
+
+    # speeds
+    background_speed = DEFAULT_BACKGROUND_SPEED
+    platform_speed = DEFAULT_PLATFORM_SPEED
+
+    # write score
+    if score>high_score and score!=100000:
+        high_score=score
+    elif score==10000:
+        high_score=9999
+
+    supp = "0"
+
+    if name=="":
+        name = "Guest"
+    
+    with open('all_player_data\leaderboard.txt', 'r') as f:
+        all_data = f.read()
+    if name in all_data:
+        ind = all_data.find(name)
+        if high_score>int(all_data[ind-6:ind-2]):
+            all_data = all_data.replace(all_data[ind-6:ind-2], supp*(4-len(str(high_score)))+str(high_score))
+            with open('all_player_data\leaderboard.txt', 'w') as f:
+                f.write(all_data)
+    else:
+        with open('all_player_data\leaderboard.txt', 'a') as f:
+            f.write(supp*(4-len(str(high_score)))+f"{high_score}, {name}\n")
+    with open('all_player_data\leaderboard.txt', 'r') as f:
+        lines = f.readlines()
+    lines.sort(key=get_score, reverse=True)
+    with open('all_player_data\leaderboard.txt', 'w') as f:
+        f.writelines(lines)
+    with open('all_player_data\\top-10.txt', 'w') as f:
+        f.writelines(lines[:10])
 
 # main loop
 while is_running:
@@ -317,6 +361,10 @@ while is_running:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
                     if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
+                        with open('all_player_data/leaderboard.txt', 'r') as f:
+                            all_data = f.read()
+                        ind = all_data.find(name)
+                        high_score = int(all_data[ind-6:ind-2])
                         print("start game")
                         is_playing=True
                     if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active:
@@ -334,6 +382,7 @@ while is_running:
                 else:
                     if menu_button_rect.collidepoint(mouse_x, mouse_y):
                         print("return to menu")
+                        refresh()
                         show_menu = True
             if e.type == pygame.KEYDOWN:
                 if text_box_active == True:
@@ -346,46 +395,7 @@ while is_running:
                         name+=e.unicode
                 elif e.key==pygame.K_SPACE and not show_menu:
                     is_playing = True
-
-                    # rects
-                    background_rect_1.bottomleft=(0,400)
-                    platform_rect_1.bottomleft=(0, 400)
-                    player_rect.bottomleft = (50, GROUND_Y)
-                    enemies_list=[]
-
-                    # speeds
-                    background_speed = DEFAULT_BACKGROUND_SPEED
-                    platform_speed = DEFAULT_PLATFORM_SPEED
-
-                    # write score
-                    if score>high_score and score!=100000:
-                        high_score=score
-                    elif score==10000:
-                        high_score=9999
-
-                    supp = "0"
-
-                    if name=="":
-                        name = "Guest"
-                    
-                    with open('all_player_data\leaderboard.txt', 'r') as f:
-                        all_data = f.read()
-                    if name in all_data:
-                        ind = all_data.find(name)
-                        if high_score>int(all_data[ind-6:ind-2]):
-                            all_data = all_data.replace(all_data[ind-6:ind-2], supp*(4-len(str(high_score)))+str(high_score))
-                            with open('all_player_data\leaderboard.txt', 'w') as f:
-                                f.write(all_data)
-                    else:
-                        with open('all_player_data\leaderboard.txt', 'a') as f:
-                            f.write(supp*(4-len(str(high_score)))+f"{high_score}, {name}\n")
-                    with open('all_player_data\leaderboard.txt', 'r') as f:
-                        lines = f.readlines()
-                    lines.sort(key=get_score, reverse=True)
-                    with open('all_player_data\leaderboard.txt', 'w') as f:
-                        f.writelines(lines)
-                    with open('all_player_data\\top-10.txt', 'w') as f:
-                        f.writelines(lines[:10])
+                    refresh()
                     start_time = pygame.time.get_ticks()
 
     if is_playing:
