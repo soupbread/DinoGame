@@ -8,11 +8,3 @@
 0210, Hi
 0127, Name
 0094, Jon
-0079, John Doe
-0070, Little Johnny
-0066, Nomnom
-0060, Timmy
-0060, Test
-0047, Turtle
-0037, Som
-0034, Katie

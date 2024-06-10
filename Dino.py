@@ -115,6 +115,7 @@ enemy_3_anim = pygame.USEREVENT+4
 pygame.time.set_timer(enemy_3_anim, 500)
 
 show_menu = True
+show_leaderboard = False
 
 text_box_active = False
 
@@ -126,9 +127,11 @@ button_rect = button_surf.get_rect(center=(400,300))
 text_box_surf = pygame.image.load('media\graphics\characters\player\player.png')
 text_box_rect = text_box_surf.get_rect(center=(400,200))
 
+leaderboard_button_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
+leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(300,400))
+
 # display functions
 def display_menu():
-    display.fill("yellow")
     title = font.render("Dino Game", True, (22, 36, 16))
     title_rect = title.get_rect(center=(400,100))
     display.fill("seagreen4")
@@ -139,10 +142,17 @@ def display_menu():
     text_box = font.render(name, True, (22, 0, 16))
     text_rect = text_box.get_rect(topleft=(200,200))
     display.blit(text_box, text_rect)
+    
+    display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
-# def display_controls():
-#     print("Displaying instructions")
-#     # movement: w, s / up, down arrows / space, mouse left button (jump only)
+def display_leaderboard():
+    display.fill("seagreen4")
+    with open('all_player_data/top-10.txt', 'r') as f:
+        for line in f:
+            line = line.rstrip('\n')
+            user_surf = font.render(line, True, (0,0,0))
+            user_rect = user_surf.get_rect()
+            display.blit(user_surf, user_rect)
 
 def display_death_screen():
     global menu_button_rect, file
@@ -197,8 +207,6 @@ def player_animation():
         if int(player_in) >= len(player_walk):
             player_in=0
         player_surf = player_walk[(int(player_in))]
-
-
 
 # no more than 5% of code longer than 80 columns
 
@@ -299,6 +307,15 @@ while is_running:
                     if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active:
                         print("text box deactivated")
                         text_box_active = False
+                    if leaderboard_button_rect.collidepoint(mouse_x, mouse_y):
+                        print('display leaderboard')
+                        display_leaderboard()
+                        # add return to menu button on leaderboard page
+
+
+
+
+                        
                 else:
                     if menu_button_rect.collidepoint(mouse_x, mouse_y):
                         print("return to menu")
@@ -349,6 +366,8 @@ while is_running:
                     lines.sort(key=get_score, reverse=True)
                     with open('all_player_data\leaderboard.txt', 'w') as f:
                         f.writelines(lines)
+                    with open('all_player_data/top-10.txt', 'w') as f:
+                        f.writelines(lines[:10])
                     start_time = pygame.time.get_ticks()
 
     if is_playing:
