@@ -344,7 +344,7 @@ while is_running:
                         name = name[:-1]
                     else:
                         name+=e.unicode
-                elif e.key==pygame.K_SPACE:
+                elif e.key==pygame.K_SPACE and not show_menu:
                     is_playing = True
 
                     # rects
