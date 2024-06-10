@@ -128,10 +128,20 @@ text_box_surf = pygame.image.load('media\graphics\characters\player\player.png')
 text_box_rect = text_box_surf.get_rect(center=(400,200))
 
 leaderboard_button_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
-leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(300,400))
+leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(600,200))
+
+line_y = 25
+
+leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
+leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
+
+to_m_button_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
+to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
 
 # display functions
 def display_menu():
+    global line_y
+    line_y+=10
     title = font.render("Dino Game", True, (22, 36, 16))
     title_rect = title.get_rect(center=(400,100))
     display.fill("seagreen4")
@@ -140,18 +150,27 @@ def display_menu():
     display.blit(text_box_surf,text_box_rect)
     
     text_box = font.render(name, True, (22, 0, 16))
-    text_rect = text_box.get_rect(topleft=(200,200))
+    text_rect = text_box.get_rect(topleft=(175,200))
     display.blit(text_box, text_rect)
     
     display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
 def display_leaderboard():
+    global line_y
+
+    line_y = 25
+
     display.fill("seagreen4")
+    display.blit(to_m_button_surf,to_m_button_rect)
+    display.blit(leaderboard_title_surf, leaderboard_title_rect)
+    
     with open('all_player_data/top-10.txt', 'r') as f:
+        line_y=60
         for line in f:
+            line_y+=20
             line = line.rstrip('\n')
             user_surf = font.render(line, True, (0,0,0))
-            user_rect = user_surf.get_rect()
+            user_rect = user_surf.get_rect(topleft=(300,line_y))
             display.blit(user_surf, user_rect)
 
 def display_death_screen():
@@ -299,6 +318,7 @@ while is_running:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
                     if button_rect.collidepoint(mouse_x, mouse_y):
+                        print('collide')
                         print("start game")
                         is_playing=True
                     if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active:
@@ -309,13 +329,10 @@ while is_running:
                         text_box_active = False
                     if leaderboard_button_rect.collidepoint(mouse_x, mouse_y):
                         print('display leaderboard')
-                        display_leaderboard()
-                        # add return to menu button on leaderboard page
-
-
-
-
-                        
+                        show_leaderboard=True
+                    if show_leaderboard and to_m_button_rect.collidepoint(mouse_x, mouse_y):
+                        print('leaderboard closed')
+                        show_leaderboard=False
                 else:
                     if menu_button_rect.collidepoint(mouse_x, mouse_y):
                         print("return to menu")
@@ -349,6 +366,9 @@ while is_running:
                         high_score=9999
 
                     supp = "0"
+
+                    if name=="":
+                        name = "Guest"
                     
                     with open('all_player_data\leaderboard.txt', 'r') as f:
                         all_data = f.read()
@@ -433,6 +453,8 @@ while is_running:
             platform_speed+=0.003
     elif score>=99999:
         display.blit(victory_surf, victory_rect)
+    elif show_menu and show_leaderboard:
+        display_leaderboard()
     elif show_menu:
         display_menu()
         start_time = pygame.time.get_ticks()
