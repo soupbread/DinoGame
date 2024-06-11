@@ -158,8 +158,9 @@ enemy_3_anim = pygame.USEREVENT+4
 pygame.time.set_timer(enemy_3_anim, 500)
 
 apple_timer = pygame.USEREVENT+5
-# pygame.time.set_timer(apple_timer, random.randint(20000, 30000))
-pygame.time.set_timer(apple_timer, random.randint(2000, 3000))
+pygame.time.set_timer(apple_timer, random.randint(20000, 30000))
+
+god_mode_timer = pygame.USEREVENT+6
 
 # display bools
 show_menu = True
@@ -274,6 +275,7 @@ def apple_collision(player, apples):
             for apple in apples:
                 if player.colliderect(apple):
                     print("god mode")
+                    pygame.time.set_timer(god_mode_timer, (10000))
                     return True
     return False
 
@@ -357,6 +359,9 @@ while is_running:
             is_playing = False
             is_running = False
         if is_playing:
+            if e.type == god_mode_timer:
+                god_mode = False
+                print("god mode gone")
             if e.type == apple_timer:
                 apple_list.append(apple_surf.get_rect(bottomleft=(900,GROUND_Y)))
                 print("spawned")
