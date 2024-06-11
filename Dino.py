@@ -362,6 +362,7 @@ while is_running:
             if e.type == god_mode_timer:
                 god_mode = False
                 print("god mode gone")
+                pygame.time.set_timer(apple_timer, (30000))
             if e.type == apple_timer:
                 apple_list.append(apple_surf.get_rect(bottomleft=(900,GROUND_Y)))
                 print("spawned")
