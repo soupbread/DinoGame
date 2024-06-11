@@ -117,14 +117,14 @@ text_box_active = False
 
 name = ""
 
-button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
+button_surf = font.render('Start', True, (64,64,64))
 button_rect = button_surf.get_rect(center=(400,300))
 
-text_box_surf = pygame.image.load('media/graphics/characters/player/player.png')
-text_box_rect = text_box_surf.get_rect(center=(400,200))
+text_box_surf = pygame.image.load('media/graphics/text_box.png')
+text_box_rect = text_box_surf.get_rect(center=(500,235))
 
-leaderboard_button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
-leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(600,200))
+leaderboard_button_surf = font.render('Leaderboard', True, (64,64,64))
+leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(400,175))
 
 line_y = 25
 
@@ -133,14 +133,14 @@ jumping = False
 leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
 leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
 
-to_m_button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
+to_m_button_surf = font.render('Return to Menu', True, (64,64,64))
 to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
 
 # display functions
 def display_menu():
     global line_y
     line_y+=10
-    title = font.render("Dino Game", True, (22, 36, 16))
+    title = font_large.render("Dino Game", True, (22, 36, 16))
     title_rect = title.get_rect(center=(400,100))
     display.fill("seagreen4")
     display.blit(title, title_rect)
@@ -148,9 +148,11 @@ def display_menu():
     display.blit(text_box_surf,text_box_rect)
     
     text_box = font.render(name, True, (22, 0, 16))
-    text_rect = text_box.get_rect(topleft=(175,200))
+    text_rect = text_box.get_rect(center=(500,235))
     display.blit(text_box, text_rect)
     
+    name_text = font.render("Player:", True, (22, 0, 16))
+    display.blit(name_text, name_text.get_rect(center=(325, 235)))
     display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
 def display_leaderboard():
