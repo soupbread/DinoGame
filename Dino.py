@@ -105,7 +105,7 @@ enemy_1_anim = pygame.USEREVENT+2
 pygame.time.set_timer(enemy_1_anim, 500)
 
 enemy_2_anim = pygame.USEREVENT+3
-pygame.time.set_timer(enemy_2_anim, 500)
+pygame.time.set_timer(enemy_2_anim, 200)
 
 enemy_3_anim = pygame.USEREVENT+4
 pygame.time.set_timer(enemy_3_anim, 500)
@@ -246,7 +246,7 @@ def enemy_movement(enemies_list):
         for enemy in enemies_list:
             enemy.x-=platform_speed
 
-            if enemy.bottom == GROUND_Y-1:
+            if enemy.bottom == GROUND_Y+1:
                 display.blit(enemy_3, enemy)
             elif enemy.bottom==GROUND_Y:
                 display.blit(enemy_1, enemy)
@@ -322,7 +322,7 @@ while is_running:
                 third_enemy = random.randint(0,5)
                 # print(third_enemy)
                 if third_enemy==0:
-                        enemies_list.append(enemy_3.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-1)))
+                        enemies_list.append(enemy_3.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y+1)))
                 elif random.randint(0,1):
                     enemies_list.append(enemy_1.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y)))
                 elif third_enemy==1 or third_enemy==2 or third_enemy==3:
