@@ -236,8 +236,6 @@ def player_crouching():
         player_surf = player_crouch
         player_rect = player_surf.get_rect(bottomleft = (50, GROUND_Y))
 
-#     player_rect = player_crouched.get_rect(bottomleft = (50,300))
-
 # enemy functions
 def enemy_movement(enemies_list):
     global platform_speed
