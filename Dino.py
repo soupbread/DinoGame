@@ -120,10 +120,10 @@ name = ""
 button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
 button_rect = button_surf.get_rect(center=(400,300))
 
-text_box_surf = pygame.image.load('media\graphics\characters\player\player.png')
+text_box_surf = pygame.image.load('media/graphics/characters/player/player.png')
 text_box_rect = text_box_surf.get_rect(center=(400,200))
 
-leaderboard_button_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
+leaderboard_button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
 leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(600,200))
 
 line_y = 25
@@ -133,7 +133,7 @@ jumping = False
 leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
 leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
 
-to_m_button_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
+to_m_button_surf = pygame.image.load('media/graphics/characters/player/player_crouch.png')
 to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
 
 # display functions
@@ -177,7 +177,7 @@ def display_death_screen():
     display.fill("seagreen4")
     died_surf = font.render("You died! Press space to restart", True, (0,0,0))
     died_rect = died_surf.get_rect(center=(400,200))
-    menu_button_surf = pygame.image.load('media\graphics\characters\player\player_walk_3.png')
+    menu_button_surf = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
     menu_button_rect = menu_button_surf.get_rect(center=(400,300))
     display.blit(died_surf, died_rect)
     display.blit(menu_button_surf, menu_button_rect)
@@ -286,23 +286,23 @@ def refresh():
 
     supp = "0"
     
-    with open('all_player_data\leaderboard.txt', 'r') as f:
+    with open('all_player_data/leaderboard.txt', 'r') as f:
         all_data = f.read()
     if name in all_data:
         ind = all_data.find(name)
         if high_score>int(all_data[ind-6:ind-2]):
             all_data = all_data.replace(all_data[ind-6:ind-2], supp*(4-len(str(high_score)))+str(high_score))
-            with open('all_player_data\leaderboard.txt', 'w') as f:
+            with open('all_player_data/leaderboard.txt', 'w') as f:
                 f.write(all_data)
     else:
-        with open('all_player_data\leaderboard.txt', 'a') as f:
+        with open('all_player_data/leaderboard.txt', 'a') as f:
             f.write(supp*(4-len(str(high_score)))+f"{high_score}, {name}\n")
-    with open('all_player_data\leaderboard.txt', 'r') as f:
+    with open('all_player_data/leaderboard.txt', 'r') as f:
         lines = f.readlines()
     lines.sort(key=get_score, reverse=True)
-    with open('all_player_data\leaderboard.txt', 'w') as f:
+    with open('all_player_data/leaderboard.txt', 'w') as f:
         f.writelines(lines)
-    with open('all_player_data\\top-10.txt', 'w') as f:
+    with open('all_player_data/top-10.txt', 'w') as f:
         f.writelines(lines[:10])
 
 # main loop
