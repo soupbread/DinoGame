@@ -178,9 +178,11 @@ def display_death_screen():
 
     display.fill("seagreen4")
     died_surf = font.render("You died! Press space to restart", True, (0,0,0))
-    died_rect = died_surf.get_rect(center=(400,200))
-    menu_button_surf = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
+    died_rect = died_surf.get_rect(center=(400,100))
+    menu_button_surf = font.render("Return to Menu", True, (64,64,64))
     menu_button_rect = menu_button_surf.get_rect(center=(400,300))
+    player_surf = pygame.transform.scale2x(player_crouch)
+    display.blit(player_surf, player_surf.get_rect(center=(400,200)))
     display.blit(died_surf, died_rect)
     display.blit(menu_button_surf, menu_button_rect)
 
