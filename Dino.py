@@ -1,8 +1,13 @@
-import pygame
+"""This program uses pygame to run a game similar to the Chrome dino game.
+"""
+
 import random
+
+import pygame
 
 # splatoon
 # attack enemy
+# no more than 5% of code longer than 80 columns
 
 pygame.init()
 
@@ -16,10 +21,6 @@ pygame.display.set_icon(pygame.image.load('media/dino.png'))
 # font
 font = pygame.font.Font('media/font/GOUDYSTO.TTF')
 font_large = pygame.font.Font("media/font/GOUDYSTO.TTF", 60)
-
-# time
-clock = pygame.time.Clock()
-start_time = 0
 
 # display
 display = pygame.display.set_mode((800,400))
@@ -46,7 +47,12 @@ GROUND_Y = 300
 # foreground
 foreground = pygame.image.load('media/graphics/environment/foreground.png')
 
-# player
+# apple
+apple_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
+apple_rect = apple_surf.get_rect(bottomleft=(800,GROUND_Y))
+apple_list = []
+
+# player images
 player_walk_1 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
 player_walk_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
 player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
@@ -58,7 +64,6 @@ player_crouch = pygame.image.load('media/graphics/characters/player/player_crouc
 
 player_walk = [player_walk_1, player_walk_2, player_walk_1, player_walk_3]
 
-# player_surf = pygame.image.load('media/graphics/characters/player/player.png')
 player_surf = player_walk[player_in]
 player_rect = player_surf.get_rect(bottomleft=(50, GROUND_Y))
 
@@ -66,39 +71,81 @@ player_grav = 0
 PLAYER_MAX_GRAV = -20
 PLAYER_DEF_GRAV = -17
 
-# enemies
+# status
+score = 0
+high_score = 0
 
+name = ""
+
+continue_jump = True
+jumping = False
+
+god_mode = False
+
+# enemies
 enemy_1_1 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_1.png')
 enemy_1_2 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_2.png')
 enemy_1_in = 0
 enemy_1_frames = [enemy_1_1, enemy_1_2]
+enemy_1 = enemy_1_frames[0]
 
 enemy_2_1 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_1.png')
 enemy_2_2 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_2.png')
 enemy_2_in = 0
 enemy_2_frames = [enemy_2_1, enemy_2_2]
+enemy_2 = enemy_2_frames[0]
 
 enemy_3_1 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_1.png')
 enemy_3_2 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_2.png')
 enemy_3_in = 0
 enemy_3_frames = [enemy_3_1, enemy_3_2]
+enemy_3 = enemy_3_frames[0]
+
+third_enemy = 1
 
 enemies_list = []
 
-# victory screen (9999)
+# victory
 victory_surf = font_large.render("YOU WIN!", False, (64,64,64))
 victory_rect = victory_surf.get_rect(center=(400,200))
 
-# general variables
-# score
-score = 0
-high_score = 0
+# menu
+title = font_large.render("Dino Game", True, (22, 36, 16))
+title_rect = title.get_rect(center=(400,100))
+
+button_surf = font.render('Start', True, (64,64,64))
+button_rect = button_surf.get_rect(center=(400,300))
+
+text_box_surf = pygame.image.load('media/graphics/text_box.png')
+text_box_rect = text_box_surf.get_rect(center=(500,235))
+
+leaderboard_button_surf = font.render('Leaderboard', True, (64,64,64))
+leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(400,175))
+
+name_text = font.render("Player:", True, (22, 0, 16))
+
+# leaderboard
+line_y = 25
+
+leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
+leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
+
+to_m_button_surf = font.render('Return to Menu', True, (64,64,64))
+to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
+
+# death
+died_surf = font.render("You died! Press space to restart", True, (0,0,0))
+died_rect = died_surf.get_rect(center=(400,100))
+
+menu_button_surf = font.render("Return to Menu", True, (64,64,64))
+menu_button_rect = menu_button_surf.get_rect(center=(400,300))
+
+# clocks
+clock = pygame.time.Clock()
+start_time = 0
 
 enemy_timer = pygame.USEREVENT+1
 pygame.time.set_timer(enemy_timer,1200)
-
-continue_jump = True
-third_enemy = 1
 
 start_time = pygame.time.get_ticks()
 enemy_1_anim = pygame.USEREVENT+2
@@ -110,38 +157,18 @@ pygame.time.set_timer(enemy_2_anim, 200)
 enemy_3_anim = pygame.USEREVENT+4
 pygame.time.set_timer(enemy_3_anim, 500)
 
+apple_timer = pygame.USEREVENT+5
+# pygame.time.set_timer(apple_timer, random.randint(20000, 30000))
+pygame.time.set_timer(apple_timer, random.randint(2000, 3000))
+
+# display bools
 show_menu = True
 show_leaderboard = False
 
 text_box_active = False
 
-name = ""
-
-button_surf = font.render('Start', True, (64,64,64))
-button_rect = button_surf.get_rect(center=(400,300))
-
-text_box_surf = pygame.image.load('media/graphics/text_box.png')
-text_box_rect = text_box_surf.get_rect(center=(500,235))
-
-leaderboard_button_surf = font.render('Leaderboard', True, (64,64,64))
-leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(400,175))
-
-line_y = 25
-
-jumping = False
-
-leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
-leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
-
-to_m_button_surf = font.render('Return to Menu', True, (64,64,64))
-to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
-
 # display functions
 def display_menu():
-    global line_y
-    line_y+=10
-    title = font_large.render("Dino Game", True, (22, 36, 16))
-    title_rect = title.get_rect(center=(400,100))
     display.fill("seagreen4")
     display.blit(title, title_rect)
     display.blit(button_surf, button_rect)
@@ -151,7 +178,6 @@ def display_menu():
     text_rect = text_box.get_rect(center=(500,235))
     display.blit(text_box, text_rect)
     
-    name_text = font.render("Player:", True, (22, 0, 16))
     display.blit(name_text, name_text.get_rect(center=(325, 235)))
     display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
@@ -177,19 +203,13 @@ def display_death_screen():
     global menu_button_rect, file
 
     display.fill("seagreen4")
-    died_surf = font.render("You died! Press space to restart", True, (0,0,0))
-    died_rect = died_surf.get_rect(center=(400,100))
-    menu_button_surf = font.render("Return to Menu", True, (64,64,64))
-    menu_button_rect = menu_button_surf.get_rect(center=(400,300))
     player_surf = pygame.transform.scale2x(player_crouch)
     display.blit(player_surf, player_surf.get_rect(center=(400,200)))
     display.blit(died_surf, died_rect)
     display.blit(menu_button_surf, menu_button_rect)
 
 def display_score():
-    global score
-    global high_score
-    global is_playing
+    global score, high_score, is_playing
     
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
@@ -229,8 +249,6 @@ def player_animation():
             player_in=0
         player_surf = player_walk[(int(player_in))]
 
-# no more than 5% of code longer than 80 columns
-
 def player_crouching():
     global player_rect, player_surf, player_grav
 
@@ -240,9 +258,27 @@ def player_crouching():
         player_surf = player_crouch
         player_rect = player_surf.get_rect(bottomleft = (50, GROUND_Y))
 
+# apple functions
+def apple_movement(applelist):
+    if applelist:
+        for apple in applelist:
+            apple.x-=platform_speed
+            display.blit(apple_surf, apple)
+        applelist = [apple for apple in applelist if apple.right>=0]
+        return applelist
+    else: return []
+
+def apple_collision(player, apples):
+    if not god_mode:
+        if apples:
+            for apple in apples:
+                if player.colliderect(apple):
+                    print("god mode")
+                    return True
+    return False
+
 # enemy functions
 def enemy_movement(enemies_list):
-    global platform_speed
 
     if enemies_list:
         for enemy in enemies_list:
@@ -261,10 +297,11 @@ def enemy_movement(enemies_list):
 # collision
 def check_collision(player, enemies):
 
-    if enemies:
-        for enemy in enemies:
-            if player.colliderect(enemy):
-                return False
+    if not god_mode:
+        if enemies:
+            for enemy in enemies:
+                if player.colliderect(enemy):
+                    return False
     return True
 
 def refresh():
@@ -320,6 +357,9 @@ while is_running:
             is_playing = False
             is_running = False
         if is_playing:
+            if e.type == apple_timer:
+                apple_list.append(apple_surf.get_rect(bottomleft=(900,GROUND_Y)))
+                print("spawned")
             if e.type == enemy_timer:
                 third_enemy = random.randint(0,5)
                 # print(third_enemy)
@@ -442,18 +482,18 @@ while is_running:
         elif not jumping:
             player_rect = player_surf.get_rect(bottomleft=(50,GROUND_Y))
         display.blit(player_surf, player_rect)
-
-        # enemy
-        # enemy_1_rect.left-=platform_speed
-        # if enemy_1_rect.right<=0: enemy_1_rect.left=800
-        # display.blit(enemy_1, enemy_1_rect)
         
         enemies_list = enemy_movement(enemies_list)
+        apple_list = apple_movement(apple_list)
 
         # foreground
         display.blit(foreground, (0, 250))
 
+        # bools
         is_playing = check_collision(player_rect, enemies_list)
+        if not god_mode:
+            god_mode = apple_collision(player_rect, apple_list)
+        print(god_mode)
 
         # score
         display_score()
