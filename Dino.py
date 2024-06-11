@@ -160,7 +160,7 @@ pygame.time.set_timer(enemy_3_anim, 500)
 apple_timer = pygame.USEREVENT+5
 pygame.time.set_timer(apple_timer, random.randint(20000, 30000))
 
-god_mode_timer = pygame.USEREVENT+6
+god_mode_timer = pygame.USEREVENT+6 
 
 # display bools
 show_menu = True
@@ -486,6 +486,12 @@ while is_running:
             player_crouching()
         elif not jumping:
             player_rect = player_surf.get_rect(bottomleft=(50,GROUND_Y))
+        
+        # add different skin for god mode?
+
+        if not god_mode:
+            god_mode = apple_collision(player_rect, apple_list)
+        
         display.blit(player_surf, player_rect)
         
         enemies_list = enemy_movement(enemies_list)
@@ -496,9 +502,6 @@ while is_running:
 
         # bools
         is_playing = check_collision(player_rect, enemies_list)
-        if not god_mode:
-            god_mode = apple_collision(player_rect, apple_list)
-        print(god_mode)
 
         # score
         display_score()
