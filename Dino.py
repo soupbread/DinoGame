@@ -38,7 +38,7 @@ platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
 DEFAULT_PLATFORM_SPEED = 6
-MAX_PLATFORM_SPEED =  20
+MAX_PLATFORM_SPEED = 20
 platform_speed = DEFAULT_PLATFORM_SPEED
 
 GROUND_Y = 300
