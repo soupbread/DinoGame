@@ -167,6 +167,7 @@ show_menu = True
 show_leaderboard = False
 
 text_box_active = False
+victory = False
 
 # display functions
 def display_menu():
@@ -201,7 +202,7 @@ def display_leaderboard():
             display.blit(user_surf, user_rect)
 
 def display_death_screen():
-    global menu_button_rect, file
+    global menu_button_rect
 
     display.fill("seagreen4")
     player_surf = pygame.transform.scale2x(player_crouch)
@@ -209,8 +210,12 @@ def display_death_screen():
     display.blit(died_surf, died_rect)
     display.blit(menu_button_surf, menu_button_rect)
 
+def display_victory_screen():
+    display.blit(victory_surf, victory_rect)
+    display.blit(menu_button_surf, menu_button_rect)
+
 def display_score():
-    global score, high_score, is_playing
+    global score, high_score, is_playing, victory
     
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
@@ -218,6 +223,7 @@ def display_score():
     score = (pygame.time.get_ticks()-start_time)//100
     if score>9999:
         is_playing=False
+        victory = True
 
     hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
@@ -404,7 +410,7 @@ while is_running:
         else:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
-                    if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
+                    if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard and not victory:
                         with open('all_player_data/leaderboard.txt', 'r') as f:
                             all_data = f.read()
                         if name=="":
@@ -447,6 +453,7 @@ while is_running:
 
     if is_playing:
         show_menu=False
+        victory = False
 
         # background
         background_rect_1.left-=background_speed
@@ -511,8 +518,8 @@ while is_running:
         if platform_speed<MAX_PLATFORM_SPEED:
             background_speed+=0.003
             platform_speed+=0.003
-    elif score>=99999:
-        display.blit(victory_surf, victory_rect)
+    elif victory:
+        display_victory_screen()
     elif show_menu and show_leaderboard:
         display_leaderboard()
     elif show_menu:
