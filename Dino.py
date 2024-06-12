@@ -8,6 +8,7 @@ import pygame
 # splatoon
 # attack enemy
 # no more than 5% of code longer than 80 columns
+# fix clicking on win screen below you win triggering both return to menu and start game
 
 pygame.init()
 
@@ -26,7 +27,7 @@ font_large = pygame.font.Font("media/font/GOUDYSTO.TTF", 60)
 display = pygame.display.set_mode((800,400))
 
 # background
-background = pygame.image.load('media/graphics/environment/sky.png')
+background = pygame.image.load('media/graphics/environment/sky.png').convert()
 background_rect_1 = background.get_rect(bottomleft=(0,400))
 background_rect_2 = background.get_rect(bottomleft=background_rect_1.bottomright)
 
@@ -34,7 +35,7 @@ DEFAULT_BACKGROUND_SPEED = 4
 background_speed = DEFAULT_BACKGROUND_SPEED
 
 # platform
-platform = pygame.image.load('media/graphics/environment/ground.png')
+platform = pygame.image.load('media/graphics/environment/ground.png').convert()
 platform_rect_1 = platform.get_rect(bottomleft=(0,400))
 platform_rect_2 = platform.get_rect(bottomleft=platform_rect_1.bottomright)
 
@@ -45,22 +46,22 @@ platform_speed = DEFAULT_PLATFORM_SPEED
 GROUND_Y = 300
 
 # foreground
-foreground = pygame.image.load('media/graphics/environment/foreground.png')
+foreground = pygame.image.load('media/graphics/environment/foreground.png').convert_alpha()
 
 # apple
-apple_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png')
+apple_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png').convert_alpha()
 apple_rect = apple_surf.get_rect(bottomleft=(800,GROUND_Y))
 apple_list = []
 
 # player images
-player_walk_1 = pygame.image.load('media/graphics/characters/player/player_walk_1.png')
-player_walk_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png')
-player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_3.png')
+player_walk_1 = pygame.image.load('media/graphics/characters/player/player_walk_1.png').convert_alpha()
+player_walk_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png').convert_alpha()
+player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_3.png').convert_alpha()
 
 player_in = 0
-player_jumping = pygame.image.load('media/graphics/characters/player/player_jump.png')
+player_jumping = pygame.image.load('media/graphics/characters/player/player_jump.png').convert_alpha()
 
-player_crouch = pygame.image.load('media/graphics/characters/player/player_crouch.png')
+player_crouch = pygame.image.load('media/graphics/characters/player/player_crouch.png').convert_alpha()
 
 player_walk = [player_walk_1, player_walk_2, player_walk_1, player_walk_3]
 
@@ -83,20 +84,20 @@ jumping = False
 god_mode = False
 
 # enemies
-enemy_1_1 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_1.png')
-enemy_1_2 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_2.png')
+enemy_1_1 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_1.png').convert_alpha()
+enemy_1_2 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_2.png').convert_alpha()
 enemy_1_in = 0
 enemy_1_frames = [enemy_1_1, enemy_1_2]
 enemy_1 = enemy_1_frames[0]
 
-enemy_2_1 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_1.png')
-enemy_2_2 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_2.png')
+enemy_2_1 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_1.png').convert_alpha()
+enemy_2_2 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_2.png').convert_alpha()
 enemy_2_in = 0
 enemy_2_frames = [enemy_2_1, enemy_2_2]
 enemy_2 = enemy_2_frames[0]
 
-enemy_3_1 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_1.png')
-enemy_3_2 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_2.png')
+enemy_3_1 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_1.png').convert_alpha()
+enemy_3_2 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_2.png').convert_alpha()
 enemy_3_in = 0
 enemy_3_frames = [enemy_3_1, enemy_3_2]
 enemy_3 = enemy_3_frames[0]
@@ -116,7 +117,7 @@ title_rect = title.get_rect(center=(400,100))
 button_surf = font.render('Start', True, (64,64,64))
 button_rect = button_surf.get_rect(center=(400,300))
 
-text_box_surf = pygame.image.load('media/graphics/text_box.png')
+text_box_surf = pygame.image.load('media/graphics/text_box.png').convert()
 text_box_rect = text_box_surf.get_rect(center=(500,235))
 
 leaderboard_button_surf = font.render('Leaderboard', True, (64,64,64))
@@ -215,7 +216,7 @@ def display_score():
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
-    score = (pygame.time.get_ticks()-start_time)//100
+    score = (pygame.time.get_ticks()-start_time)//100+9990
     if score>9999:
         is_playing=False
 
@@ -326,9 +327,10 @@ def refresh():
         high_score=9999
     elif score>high_score:
         high_score=score
+    write_data()
 
+def write_data():
     supp = "0"
-    
     with open('all_player_data/leaderboard.txt', 'r') as f:
         all_data = f.read()
     if name in all_data:
@@ -359,7 +361,7 @@ while is_running:
             is_playing = False
             is_running = False
         if is_playing:
-            if e.type == god_mode_timer:
+            if e.type == god_mode_timer and god_mode:
                 god_mode = False
                 print("god mode gone")
                 pygame.time.set_timer(apple_timer, (30000))
@@ -412,15 +414,17 @@ while is_running:
                         if name in all_data:
                             ind = all_data.find(name)
                             high_score = int(all_data[ind-6:ind-2])
+                        else:
+                            high_score = 0
                         print("start game")
                         is_playing=True
-                    if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active:
+                    if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active and not show_leaderboard:
                         print("text box activated")
                         text_box_active = True
-                    if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active:
+                    if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active and not show_leaderboard:
                         print("text box deactivated")
                         text_box_active = False
-                    if leaderboard_button_rect.collidepoint(mouse_x, mouse_y) and show_menu:
+                    if leaderboard_button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
                         print('display leaderboard')
                         show_leaderboard=True
                     if show_leaderboard and to_m_button_rect.collidepoint(mouse_x, mouse_y):
@@ -511,7 +515,7 @@ while is_running:
         if platform_speed<MAX_PLATFORM_SPEED:
             background_speed+=0.003
             platform_speed+=0.003
-    elif score>=99999:
+    elif score>9999:
         display.blit(victory_surf, victory_rect)
     elif show_menu and show_leaderboard:
         display_leaderboard()
