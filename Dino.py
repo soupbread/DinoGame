@@ -218,7 +218,7 @@ def display_score():
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
-    score = (pygame.time.get_ticks()-start_time)//100+9990
+    score = (pygame.time.get_ticks()-start_time)//100
     if score>9999:
         is_playing=False
         victory = True
