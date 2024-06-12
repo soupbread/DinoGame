@@ -128,7 +128,7 @@ name_text = font.render("Player:", True, (22, 0, 16))
 # leaderboard
 
 leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
-leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
+leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,25))
 
 to_m_button_surf = font.render('Return to Menu', True, (64,64,64))
 to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
@@ -184,18 +184,16 @@ def display_menu():
     display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
 def display_leaderboard():
-    line_y = 25
-    place = 0
-
     display.fill("seagreen4")
     display.blit(to_m_button_surf,to_m_button_rect)
     display.blit(leaderboard_title_surf, leaderboard_title_rect)
     
     with open('all_player_data/top-10.txt', 'r') as f:
         line_y=60
-        place+=1
+        place = 0
         for line in f:
             line_y+=20
+            place+=1
             line = line.rstrip('\n')
             user_surf = font.render(f"{place}. {line}", True, (0,0,0))
             user_rect = user_surf.get_rect(topleft=(300,line_y))
