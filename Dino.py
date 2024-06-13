@@ -5,6 +5,15 @@ import random
 
 import pygame
 
+__author__ = "Molly Mao"
+__copyright__ = "Copyright 2024, Anderson Innovations"
+__credits__ = ["Molly Mao"]
+__license__ = "MIT"
+__version__ = "1.0.1"
+__maintainer__ = "Molly Mao"
+__email__ = "example@example.com"
+__status__ = "Production"
+
 pygame.init()
 
 is_running = True
@@ -356,7 +365,6 @@ def apple_collision(player, apples):
         if apples:
             for apple in apples:
                 if player.colliderect(apple):
-                    print("god mode")
                     pygame.time.set_timer(god_mode_timer, (10000))
                     return True
     return False
