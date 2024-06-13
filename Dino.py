@@ -103,7 +103,6 @@ high_score = 0
 
 name = ""
 
-continue_jump = True
 jumping = False
 
 god_mode = False
@@ -279,7 +278,8 @@ def get_score(line):
 
 # player functions
 def player_jump():
-    """Changes the y position of the player rectangle to jump.
+    """Changes the y position of the player rect to jump.
+    Sets jumping status to False if the player landed on the ground.
     """
     global player_grav, player_rect, jumping
     
@@ -340,7 +340,8 @@ def apple_movement(applelist):
         applelist (list): List of all apple rects on the screen.
 
     Returns:
-        list: An updated list of apple rects on the screen.
+        list: An updated list of apple rects on the screen. If there
+        are no apple rects, an empty list.
     """
     if not god_mode:
         if applelist:
@@ -375,15 +376,15 @@ def enemy_movement(enemies_list):
     """Moves the enemy rects.
 
     Moves each enemy rect in the list across the screen.
-    If an enemy rect is off the screen, then it is removed
-    from the list. If there are no elements in the list,
-    then an empty list is returned.
+    If an enemy rect moved off the screen, then it is removed
+    from the list.
     
     Args:
         enemies_list (list): List of all enemy rects on the screen.
 
     Returns:
-        list: An updated list of enemy rects on the screen.
+        list: An updated list of enemy rects on the screen. If there
+        are no enemy rects, an empty list.
     """
     if enemies_list:
         for enemy in enemies_list:
@@ -420,8 +421,8 @@ def check_collision(player, enemies):
     return True
 
 def refresh_placement():
-    """Resets sprites to their original location. Clears enemies and apples. 
-    Resets timers. Resets the speed.
+    """Resets sprites to their original location. Clears enemies and apples.
+    Resets the speed.
     """
     global background_rect_1, platform_rect_1, player_rect
     global enemies_list, background_speed, platform_speed
@@ -441,7 +442,6 @@ def refresh_placement():
 def reset_timers():
     """Resets all timers.
     """
-    # timers
     pygame.time.set_timer(enemy_timer,1200)
     pygame.time.set_timer(enemy_1_anim, 500)
     pygame.time.set_timer(enemy_2_anim, 200)
@@ -466,6 +466,7 @@ def write_data():
     If so, update the user's high score if it has been exceeded.
     Otherwise, add the user's name and score to a new line.
     Sort the leaderboard by score.
+    Write the top 10 players to top-10.txt.
     """
     with open('all_player_data/leaderboard.txt', 'r') as f:
         all_data = f.read()
@@ -528,19 +529,6 @@ while is_running:
                 if enemy_3_in==0: enemy_3_in=1
                 else: enemy_3_in = 0
                 enemy_3 = enemy_3_frames[enemy_3_in]
-            if e.type == pygame.MOUSEBUTTONDOWN:
-                if e.button==1 and player_rect.bottom==GROUND_Y:
-                    player_grav=PLAYER_DEF_GRAV
-                    continue_jump=True
-            if e.type == pygame.KEYDOWN:
-                if (e.key==pygame.K_UP or
-                    e.key==pygame.K_w or
-                    e.key==pygame.K_SPACE
-                    and player_rect.bottom==GROUND_Y):
-                    player_grav = PLAYER_DEF_GRAV
-                    continue_jump=True
-            if e.type == pygame.KEYUP:
-                continue_jump=False
         else:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
@@ -638,8 +626,7 @@ while is_running:
             if (
                 player_grav<=0 and 
                 player_grav>PLAYER_MAX_GRAV-player_grav and # puts a cap on the jump height
-                player_rect.y>90 and 
-                continue_jump
+                player_rect.y>90 # puts a cap on the jump height
                 ):
                 player_grav-=2
             if player_rect.bottom==GROUND_Y:
