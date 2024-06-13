@@ -126,10 +126,9 @@ leaderboard_button_rect = leaderboard_button_surf.get_rect(center=(400,175))
 name_text = font.render("Player:", True, (22, 0, 16))
 
 # leaderboard
-line_y = 25
 
 leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
-leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,line_y))
+leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,25))
 
 to_m_button_surf = font.render('Return to Menu', True, (64,64,64))
 to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
@@ -168,6 +167,7 @@ show_menu = True
 show_leaderboard = False
 
 text_box_active = False
+victory = False
 
 # display functions
 def display_menu():
@@ -184,25 +184,23 @@ def display_menu():
     display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
 def display_leaderboard():
-    global line_y
-
-    line_y = 25
-
     display.fill("seagreen4")
     display.blit(to_m_button_surf,to_m_button_rect)
     display.blit(leaderboard_title_surf, leaderboard_title_rect)
     
     with open('all_player_data/top-10.txt', 'r') as f:
         line_y=60
+        place = 0
         for line in f:
             line_y+=20
+            place+=1
             line = line.rstrip('\n')
-            user_surf = font.render(line, True, (0,0,0))
+            user_surf = font.render(f"{place}. {line}", True, (0,0,0))
             user_rect = user_surf.get_rect(topleft=(300,line_y))
             display.blit(user_surf, user_rect)
 
 def display_death_screen():
-    global menu_button_rect, file
+    global menu_button_rect
 
     display.fill("seagreen4")
     player_surf = pygame.transform.scale2x(player_crouch)
@@ -210,15 +208,20 @@ def display_death_screen():
     display.blit(died_surf, died_rect)
     display.blit(menu_button_surf, menu_button_rect)
 
+def display_victory_screen():
+    display.blit(victory_surf, victory_rect)
+    display.blit(menu_button_surf, menu_button_rect)
+
 def display_score():
-    global score, high_score, is_playing
+    global score, high_score, is_playing, victory
     
     score_surf = font.render(str(score), False, (64,64,64))
     score_rect = score_surf.get_rect(topright = (775, 25))
     display.blit(score_surf, score_rect)
-    score = (pygame.time.get_ticks()-start_time)//100+9990
+    score = (pygame.time.get_ticks()-start_time)//100
     if score>9999:
         is_playing=False
+        victory = True
 
     hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
@@ -406,7 +409,7 @@ while is_running:
         else:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
-                    if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
+                    if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard and not victory:
                         with open('all_player_data/leaderboard.txt', 'r') as f:
                             all_data = f.read()
                         if name=="":
@@ -451,6 +454,7 @@ while is_running:
 
     if is_playing:
         show_menu=False
+        victory = False
 
         # background
         background_rect_1.left-=background_speed
@@ -515,8 +519,8 @@ while is_running:
         if platform_speed<MAX_PLATFORM_SPEED:
             background_speed+=0.003
             platform_speed+=0.003
-    elif score>9999:
-        display.blit(victory_surf, victory_rect)
+    elif victory:
+        display_victory_screen()
     elif show_menu and show_leaderboard:
         display_leaderboard()
     elif show_menu:
