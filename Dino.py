@@ -103,7 +103,8 @@ enemy_2_in = 0
 enemy_2_frames = [enemy_2_1, enemy_2_2]
 enemy_2 = enemy_2_frames[0]
 
-enemy_3_1 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_1.png').convert_alpha()
+enemy_3_1 = pygame.image.load(
+    'media/graphics/characters/enemies/enemy_3_frame_1.png').convert_alpha()
 enemy_3_2 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_2.png').convert_alpha()
 enemy_3_in = 0
 enemy_3_frames = [enemy_3_1, enemy_3_2]
@@ -346,6 +347,7 @@ def refresh():
         high_score=9999
     elif score>high_score:
         high_score=score
+
     write_data()
 
 def write_data():
