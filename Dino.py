@@ -249,6 +249,7 @@ def display_victory_screen():
 
 def display_score():
     """Displays the score and high score on the game screen.
+    Ends game if score is greater than 9999 (player wins).
     """
     global score, high_score, is_playing, victory
     
@@ -468,12 +469,17 @@ def write_data():
     """
     with open('all_player_data/leaderboard.txt', 'r') as f:
         all_data = f.read()
+
     if name in all_data:
         ind = all_data.find(name)
+
         if high_score>int(all_data[ind-6:ind-2]):
+            # if high score is greater than recorded high score, replace it
             all_data = all_data.replace(all_data[ind-6:ind-2], "0"*(4-len(str(high_score)))+str(high_score))
+            
             with open('all_player_data/leaderboard.txt', 'w') as f:
                 f.write(all_data)
+
     else:
         with open('all_player_data/leaderboard.txt', 'a') as f:
             f.write("0"*(4-len(str(high_score)))+f"{high_score}, {name}\n")
@@ -487,7 +493,6 @@ def write_data():
 
 # main loop
 while is_running:
-    # check inputs
 
     mouse_x, mouse_y = pygame.mouse.get_pos()
 
@@ -655,23 +660,24 @@ while is_running:
         # foreground
         display.blit(foreground, (0, 250))
 
+        is_playing = check_collision(player_rect, enemies_list)
+
         # score
         display_score()
-
-        is_playing = check_collision(player_rect, enemies_list)
 
         # speed update
         if platform_speed<MAX_PLATFORM_SPEED:
             background_speed+=0.003
             platform_speed+=0.003
 
-    elif victory:
-        display_victory_screen()
     elif show_menu and show_leaderboard:
         display_leaderboard()
     elif show_menu:
+        victory = False
         display_menu()
         start_time = pygame.time.get_ticks()
+    elif victory:
+        display_victory_screen()
     else:
         display_death_screen()
     
