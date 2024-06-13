@@ -384,23 +384,18 @@ while is_running:
         if is_playing:
             if e.type == god_mode_timer and god_mode:
                 god_mode = False
-                print("god mode gone")
                 pygame.time.set_timer(apple_timer, (30000))
             if e.type == apple_timer:
                 apple_list.append(apple_surf.get_rect(bottomleft=(900,GROUND_Y)))
-                print("spawned")
             if e.type == enemy_timer:
                 third_enemy = random.randint(0,5)
-                # print(third_enemy)
                 if third_enemy==0:
                         enemies_list.append(enemy_3.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y+1)))
                 elif random.randint(0,1):
                     enemies_list.append(enemy_1.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y)))
                 elif third_enemy==1 or third_enemy==2 or third_enemy==3:
-                        # print("spawned midair")
                         enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-100)))
                 elif third_enemy==4 or third_enemy==5:
-                        # print("spawned near ground")
                         enemies_list.append(enemy_2.get_rect(bottomleft=(random.randint(1000, 1200), GROUND_Y-60)))
             if e.type == enemy_1_anim:
                 if enemy_1_in==0: enemy_1_in=1
@@ -437,30 +432,23 @@ while is_running:
                             high_score = int(all_data[ind-6:ind-2])
                         else:
                             high_score = 0
-                        print("start game")
                         is_playing=True
                     if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active and not show_leaderboard:
-                        print("text box activated")
                         text_box_active = True
                     if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active and not show_leaderboard:
-                        print("text box deactivated")
                         text_box_active = False
                     if leaderboard_button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
-                        print('display leaderboard')
                         show_leaderboard=True
                     if show_leaderboard and menu_button_rect.collidepoint(mouse_x, mouse_y):
-                        print('leaderboard closed')
                         show_leaderboard=False
                 else:
                     if menu_button_rect.collidepoint(mouse_x, mouse_y):
-                        print("return to menu")
                         refresh()
                         show_menu = True
             if e.type == pygame.KEYDOWN:
                 if text_box_active == True:
                     if e.key == pygame.K_RETURN:
                         text_box_active = False
-                        print("text box deactivated")
                     elif e.key == pygame.K_BACKSPACE:
                         name = name[:-1]
                     else:
@@ -514,8 +502,6 @@ while is_running:
         elif not jumping:
             player_rect = player_surf.get_rect(bottomleft=(50,GROUND_Y))
         
-        # add different skin for god mode?
-
         if not god_mode:
             god_mode = apple_collision(player_rect, apple_list)
         
@@ -527,7 +513,6 @@ while is_running:
         # foreground
         display.blit(foreground, (0, 250))
 
-        # bools
         is_playing = check_collision(player_rect, enemies_list)
 
         # score
