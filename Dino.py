@@ -5,8 +5,6 @@ import random
 
 import pygame
 
-# no more than 5% of code longer than 80 columns
-
 pygame.init()
 
 is_running = True
@@ -53,7 +51,7 @@ apple_surf = pygame.image.load('media/graphics/apple.png').convert_alpha()
 apple_rect = apple_surf.get_rect(bottomleft=(800,GROUND_Y))
 apple_list = []
 
-# player images
+# player
 player_walk_1 = pygame.image.load(
     'media/graphics/characters/player/player_walk_1.png').convert_alpha()
 player_walk_2 = pygame.image.load(
@@ -90,7 +88,7 @@ player_grav = 0
 PLAYER_MAX_GRAV = -20
 PLAYER_DEF_GRAV = -17
 
-# status
+# player info / status
 score = 0
 high_score = 0
 
@@ -138,8 +136,8 @@ victory_rect = victory_surf.get_rect(center=(400,200))
 title = font_large.render("Dino Game", True, (22, 36, 16))
 title_rect = title.get_rect(center=(400,100))
 
-button_surf = font.render('Start', True, (64,64,64))
-button_rect = button_surf.get_rect(center=(400,300))
+start_button_surf = font.render('Start', True, (64,64,64))
+start_button_rect = start_button_surf.get_rect(center=(400,300))
 
 text_box_surf = pygame.image.load('media/graphics/text_box.png').convert()
 text_box_rect = text_box_surf.get_rect(center=(500,235))
@@ -186,15 +184,16 @@ god_mode_timer = pygame.USEREVENT+6
 # display bools
 show_menu = True
 show_leaderboard = False
-
 text_box_active = False
 victory = False
 
 # display functions
 def display_menu():
+    """Displays the main menu.
+    """
     display.fill("seagreen4")
     display.blit(title, title_rect)
-    display.blit(button_surf, button_rect)
+    display.blit(start_button_surf, start_button_rect)
     display.blit(text_box_surf,text_box_rect)
     
     text_box = font.render(name, True, (22, 0, 16))
@@ -205,6 +204,8 @@ def display_menu():
     display.blit(leaderboard_button_surf, leaderboard_button_rect)
 
 def display_leaderboard():
+    """Displays the leadeboard screen.
+    """
     display.fill("seagreen4")
     display.blit(menu_button_surf,menu_button_rect)
     display.blit(leaderboard_title_surf, leaderboard_title_rect)
@@ -221,6 +222,8 @@ def display_leaderboard():
             display.blit(user_surf, user_rect)
 
 def display_death_screen():
+    """Displays the game over screen.
+    """
     global menu_button_rect
 
     display.fill("seagreen4")
@@ -230,10 +233,14 @@ def display_death_screen():
     display.blit(menu_button_surf, menu_button_rect)
 
 def display_victory_screen():
+    """Displays the victory screen.
+    """
     display.blit(victory_surf, victory_rect)
     display.blit(menu_button_surf, menu_button_rect)
 
 def display_score():
+    """Displays the score and high score on the game screen.
+    """
     global score, high_score, is_playing, victory
     
     score_surf = font.render(str(score), False, (64,64,64))
@@ -250,13 +257,20 @@ def display_score():
     display.blit(hi_score_surf, hi_score_rect)
 
 def get_score(line):
-    return int(line.split(',')[0])
+    """Reads a line in the leaderboard.txt file and extracts the score from it.
 
-def display_tutorial():
-    print("hihi")
+    Args:
+        line String: a line in the leaderboard.txt file
+
+    Returns:
+        int: the score of the user
+    """
+    return int(line.split(',')[0])
 
 # player functions
 def player_jump():
+    """Changes the y position of the player rectangle to jump.
+    """
     global player_grav, player_rect, jumping
     
     player_grav+=1
@@ -266,6 +280,8 @@ def player_jump():
         player_rect.bottom=GROUND_Y
 
 def player_animation():
+    """Animates the player (not including crouch).
+    """
     global player_surf, player_in
     
     if player_rect.bottom<GROUND_Y:
@@ -284,6 +300,12 @@ def player_animation():
             player_surf = player_walk_god[(int(player_in))]
 
 def player_crouching():
+    """Allows the player to crouch.
+
+    Changes the player sprite to a crouching sprite.
+    If the player is in the air, the gravity is increased when crouching
+    to allow the player to drop back onto the ground sooner.
+    """
     global player_rect, player_surf, player_grav
 
     if player_rect.bottom<300:
@@ -297,6 +319,19 @@ def player_crouching():
 
 # apple functions
 def apple_movement(applelist):
+    """Moves the apple rect that enables god mode.
+
+    Moves each apple rect in the list across the screen.
+    If an apple is off the screen or if god mode is achieved
+    (meaning the apple has been eaten), then all apples
+    are removed from the list.
+    
+    Args:
+        applelist (list): List of all apple rects on the screen.
+
+    Returns:
+        list: An updated list of apple rects on the screen.
+    """
     if not god_mode:
         if applelist:
             for apple in applelist:
@@ -308,6 +343,15 @@ def apple_movement(applelist):
     else: return []
 
 def apple_collision(player, apples):
+    """Checks if apple collides with the player.
+
+    Args:
+        player (pygame.rect.Rect): the player rect
+        apples (list): the list of apple rects on the screen
+
+    Returns:
+        boolean: whether or not the player has collided with an apple rect
+    """
     if not god_mode:
         if apples:
             for apple in apples:
@@ -319,7 +363,19 @@ def apple_collision(player, apples):
 
 # enemy functions
 def enemy_movement(enemies_list):
+    """Moves the enemy rects.
 
+    Moves each enemy rect in the list across the screen.
+    If an enemy rect is off the screen, then it is removed
+    from the list. If there are no elements in the list,
+    then an empty list is returned.
+    
+    Args:
+        enemies_list (list): List of all enemy rects on the screen.
+
+    Returns:
+        list: An updated list of enemy rects on the screen.
+    """
     if enemies_list:
         for enemy in enemies_list:
             enemy.x-=platform_speed
@@ -336,7 +392,17 @@ def enemy_movement(enemies_list):
 
 # collision
 def check_collision(player, enemies):
+    """Checks if the player rect has collided with an enemy rect.
 
+    If god mode is activated, collisions are not checked for.
+
+    Args:
+        player (pygame.rect.Rect): the player rect
+        enemies (list): the list of enemy rects
+
+    Returns:
+        boolean: whether or not the player rect has collided with an enemy rect
+    """
     if not god_mode:
         if enemies:
             for enemy in enemies:
@@ -344,49 +410,72 @@ def check_collision(player, enemies):
                     return False
     return True
 
-def refresh():
+def refresh_placement():
+    """Resets sprites to their original location. Clears enemies and apples. 
+    Resets timers. Resets the speed.
+    """
     global background_rect_1, platform_rect_1, player_rect
     global enemies_list, background_speed, platform_speed
-    global score, high_score, name
+    global apple_list, god_mode
 
     # rects
     background_rect_1.bottomleft=(0,400)
     platform_rect_1.bottomleft=(0, 400)
     player_rect.bottomleft = (50, GROUND_Y)
     enemies_list=[]
+    apple_list=[]
 
     # speeds
     background_speed = DEFAULT_BACKGROUND_SPEED
     platform_speed = DEFAULT_PLATFORM_SPEED
 
-    # write score
+def reset_timers():
+    """Resets all timers.
+    """
+    # timers
+    pygame.time.set_timer(enemy_timer,1200)
+    pygame.time.set_timer(enemy_1_anim, 500)
+    pygame.time.set_timer(enemy_2_anim, 200)
+    pygame.time.set_timer(enemy_3_anim, 500)
+    pygame.time.set_timer(apple_timer, random.randint(20000, 30000))
+
+def update_high_score():
+    """Sets player high score to current score if current score is higher
+    """
+    global score, high_score
+
     if score==10000:
         high_score=9999
     elif score>high_score:
         high_score=score
 
-    write_data()
-
 def write_data():
-    supp = "0"
+    """Writes player name and score to leaderboard files.
+
+    Reads leaderboard.txt and saves it as a String in the all_data variable.
+    Checks if this user has played before.
+    If so, update the user's high score if it has been exceeded.
+    Otherwise, add the user's name and score to a new line.
+    Sort the leaderboard by score.
+    """
     with open('all_player_data/leaderboard.txt', 'r') as f:
         all_data = f.read()
     if name in all_data:
         ind = all_data.find(name)
         if high_score>int(all_data[ind-6:ind-2]):
-            all_data = all_data.replace(all_data[ind-6:ind-2], supp*(4-len(str(high_score)))+str(high_score))
+            all_data = all_data.replace(all_data[ind-6:ind-2], "0"*(4-len(str(high_score)))+str(high_score))
             with open('all_player_data/leaderboard.txt', 'w') as f:
                 f.write(all_data)
     else:
         with open('all_player_data/leaderboard.txt', 'a') as f:
-            f.write(supp*(4-len(str(high_score)))+f"{high_score}, {name}\n")
+            f.write("0"*(4-len(str(high_score)))+f"{high_score}, {name}\n")
     with open('all_player_data/leaderboard.txt', 'r') as f:
-        lines = f.readlines()
-    lines.sort(key=get_score, reverse=True)
+        all_data = f.readlines()
+    all_data.sort(key=get_score, reverse=True)
     with open('all_player_data/leaderboard.txt', 'w') as f:
-        f.writelines(lines)
+        f.writelines(all_data)
     with open('all_player_data/top-10.txt', 'w') as f:
-        f.writelines(lines[:10])
+        f.writelines(all_data[:10])
 
 # main loop
 while is_running:
@@ -401,7 +490,7 @@ while is_running:
         if is_playing:
             if e.type == god_mode_timer and god_mode:
                 god_mode = False
-                pygame.time.set_timer(apple_timer, (30000))
+                pygame.time.set_timer(apple_timer, random.randint(20000, 30000))
             if e.type == apple_timer:
                 apple_list.append(apple_surf.get_rect(bottomleft=(900,GROUND_Y)))
             if e.type == enemy_timer:
@@ -442,23 +531,25 @@ while is_running:
         else:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
-                    if (
-                        button_rect.collidepoint(mouse_x, mouse_y) 
+                    if not show_leaderboard:
+                        if (
+                        start_button_rect.collidepoint(mouse_x, mouse_y) 
                         and show_menu 
-                        and not show_leaderboard 
                         and not victory
                         ):
-                        with open('all_player_data/leaderboard.txt', 'r') as f:
-                            all_data = f.read()
-                        if name=="":
-                            name = "Guest"
-                        if name in all_data:
-                            ind = all_data.find(name)
-                            high_score = int(all_data[ind-6:ind-2])
-                        else:
-                            high_score = 0
-                        is_playing=True
-                    if not show_leaderboard:
+                            with open('all_player_data/leaderboard.txt', 'r') as f:
+                                all_data = f.read()
+                            if name=="":
+                                name = "Guest"
+                            if name in all_data:
+                                ind = all_data.find(name)
+                                high_score = int(all_data[ind-6:ind-2])
+                            else:
+                                high_score = 0
+                            refresh_placement()
+                            reset_timers()
+                            god_mode = False
+                            is_playing=True
                         if (text_box_rect.collidepoint(mouse_x, mouse_y) and 
                             not text_box_active):
                             text_box_active = True
@@ -471,10 +562,10 @@ while is_running:
                             show_leaderboard=True
                     elif menu_button_rect.collidepoint(mouse_x, mouse_y):
                         show_leaderboard=False
-                else:
-                    if menu_button_rect.collidepoint(mouse_x, mouse_y):
-                        refresh()
+                elif menu_button_rect.collidepoint(mouse_x, mouse_y):
                         show_menu = True
+                        update_high_score()
+                        write_data()
             if e.type == pygame.KEYDOWN:
                 if text_box_active == True:
                     if e.key == pygame.K_RETURN:
@@ -485,7 +576,11 @@ while is_running:
                         name+=e.unicode
                 elif e.key==pygame.K_SPACE and not show_menu:
                     is_playing = True
-                    refresh()
+                    refresh_placement()
+                    update_high_score()
+                    write_data()
+                    god_mode = False
+                    reset_timers()
                     start_time = pygame.time.get_ticks()
 
     if is_playing:
@@ -529,7 +624,7 @@ while is_running:
             jumping = True
             if (
                 player_grav<=0 and 
-                player_grav>PLAYER_MAX_GRAV-player_grav and 
+                player_grav>PLAYER_MAX_GRAV-player_grav and # puts a cap on the jump height
                 player_rect.y>90 and 
                 continue_jump
                 ):
@@ -552,15 +647,16 @@ while is_running:
         # foreground
         display.blit(foreground, (0, 250))
 
-        is_playing = check_collision(player_rect, enemies_list)
-
         # score
         display_score()
+
+        is_playing = check_collision(player_rect, enemies_list)
 
         # speed update
         if platform_speed<MAX_PLATFORM_SPEED:
             background_speed+=0.003
             platform_speed+=0.003
+
     elif victory:
         display_victory_screen()
     elif show_menu and show_leaderboard:

@@ -1,10 +1,2 @@
-9999, Gamer God 
-8888, Jeremy
-8877, Sarah
-4889, Santa
-1923, George
-1234, Not a Gamer
-1111, Hoho
-0427, Timmy
-0427, Test
-0427, Guest
+0076, Guest
+0046, User
