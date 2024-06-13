@@ -5,10 +5,7 @@ import random
 
 import pygame
 
-# splatoon
-# attack enemy
 # no more than 5% of code longer than 80 columns
-# fix clicking on win screen below you win triggering both return to menu and start game
 
 pygame.init()
 
@@ -27,9 +24,11 @@ font_large = pygame.font.Font("media/font/GOUDYSTO.TTF", 60)
 display = pygame.display.set_mode((800,400))
 
 # background
-background = pygame.image.load('media/graphics/environment/sky.png').convert()
+background = pygame.image.load(
+    'media/graphics/environment/sky.png').convert()
 background_rect_1 = background.get_rect(bottomleft=(0,400))
-background_rect_2 = background.get_rect(bottomleft=background_rect_1.bottomright)
+background_rect_2 = background.get_rect(
+    bottomleft=background_rect_1.bottomright)
 
 DEFAULT_BACKGROUND_SPEED = 4
 background_speed = DEFAULT_BACKGROUND_SPEED
@@ -46,7 +45,8 @@ platform_speed = DEFAULT_PLATFORM_SPEED
 GROUND_Y = 300
 
 # foreground
-foreground = pygame.image.load('media/graphics/environment/foreground.png').convert_alpha()
+foreground = pygame.image.load(
+    'media/graphics/environment/foreground.png').convert_alpha()
 
 # apple
 apple_surf = pygame.image.load('media/graphics/apple.png').convert_alpha()
@@ -54,23 +54,34 @@ apple_rect = apple_surf.get_rect(bottomleft=(800,GROUND_Y))
 apple_list = []
 
 # player images
-player_walk_1 = pygame.image.load('media/graphics/characters/player/player_walk_1.png').convert_alpha()
-player_walk_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png').convert_alpha()
-player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_3.png').convert_alpha()
+player_walk_1 = pygame.image.load(
+    'media/graphics/characters/player/player_walk_1.png').convert_alpha()
+player_walk_2 = pygame.image.load(
+    'media/graphics/characters/player/player_walk_2.png').convert_alpha()
+player_walk_3 = pygame.image.load(
+    'media/graphics/characters/player/player_walk_3.png').convert_alpha()
 
-player_walk_1_god = pygame.image.load('media/graphics/characters/player/player_walk_1 - god.png').convert_alpha()
-player_walk_2_god = pygame.image.load('media/graphics/characters/player/player_walk_2 - god.png').convert_alpha()
-player_walk_3_god = pygame.image.load('media/graphics/characters/player/player_walk_3 - god.png').convert_alpha()
+player_walk_1_god = pygame.image.load(
+    'media/graphics/characters/player/player_walk_1 - god.png').convert_alpha()
+player_walk_2_god = pygame.image.load(
+    'media/graphics/characters/player/player_walk_2 - god.png').convert_alpha()
+player_walk_3_god = pygame.image.load(
+    'media/graphics/characters/player/player_walk_3 - god.png').convert_alpha()
 
 player_in = 0
-player_jumping = pygame.image.load('media/graphics/characters/player/player_jump.png').convert_alpha()
-player_jumping_god = pygame.image.load('media/graphics/characters/player/player_jump - god.png').convert_alpha()
+player_jumping = pygame.image.load(
+    'media/graphics/characters/player/player_jump.png').convert_alpha()
+player_jumping_god = pygame.image.load(
+    'media/graphics/characters/player/player_jump - god.png').convert_alpha()
 
-player_crouch = pygame.image.load('media/graphics/characters/player/player_crouch.png').convert_alpha()
-player_crouch_god = pygame.image.load('media/graphics/characters/player/player_crouch - god.png').convert_alpha()
+player_crouch = pygame.image.load(
+    'media/graphics/characters/player/player_crouch.png').convert_alpha()
+player_crouch_god = pygame.image.load(
+    'media/graphics/characters/player/player_crouch - god.png').convert_alpha()
 
 player_walk = [player_walk_1, player_walk_2, player_walk_1, player_walk_3]
-player_walk_god = [player_walk_1_god, player_walk_2_god, player_walk_1_god, player_walk_3_god]
+player_walk_god = [
+    player_walk_1_god, player_walk_2_god, player_walk_1_god, player_walk_3_god]
 
 player_surf = player_walk[player_in]
 player_rect = player_surf.get_rect(bottomleft=(50, GROUND_Y))
@@ -91,21 +102,26 @@ jumping = False
 god_mode = False
 
 # enemies
-enemy_1_1 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_1.png').convert_alpha()
-enemy_1_2 = pygame.image.load('media/graphics/characters/enemies/enemy_1_frame_2.png').convert_alpha()
+enemy_1_1 = pygame.image.load(
+    'media/graphics/characters/enemies/enemy_1_frame_1.png').convert_alpha()
+enemy_1_2 = pygame.image.load(
+    'media/graphics/characters/enemies/enemy_1_frame_2.png').convert_alpha()
 enemy_1_in = 0
 enemy_1_frames = [enemy_1_1, enemy_1_2]
 enemy_1 = enemy_1_frames[0]
 
-enemy_2_1 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_1.png').convert_alpha()
-enemy_2_2 = pygame.image.load('media/graphics/characters/enemies/enemy_2_frame_2.png').convert_alpha()
+enemy_2_1 = pygame.image.load(
+    'media/graphics/characters/enemies/enemy_2_frame_1.png').convert_alpha()
+enemy_2_2 = pygame.image.load(
+    'media/graphics/characters/enemies/enemy_2_frame_2.png').convert_alpha()
 enemy_2_in = 0
 enemy_2_frames = [enemy_2_1, enemy_2_2]
 enemy_2 = enemy_2_frames[0]
 
 enemy_3_1 = pygame.image.load(
     'media/graphics/characters/enemies/enemy_3_frame_1.png').convert_alpha()
-enemy_3_2 = pygame.image.load('media/graphics/characters/enemies/enemy_3_frame_2.png').convert_alpha()
+enemy_3_2 = pygame.image.load(
+    'media/graphics/characters/enemies/enemy_3_frame_2.png').convert_alpha()
 enemy_3_in = 0
 enemy_3_frames = [enemy_3_1, enemy_3_2]
 enemy_3 = enemy_3_frames[0]
@@ -228,7 +244,8 @@ def display_score():
         is_playing=False
         victory = True
 
-    hi_score_surf = font.render("High score: "+str(high_score), False, (64,64,64))
+    hi_score_surf = font.render(
+        "High score: "+str(high_score), False, (64,64,64))
     hi_score_rect = hi_score_surf.get_rect(topleft = (500,25))
     display.blit(hi_score_surf, hi_score_rect)
 
@@ -414,7 +431,10 @@ while is_running:
                     player_grav=PLAYER_DEF_GRAV
                     continue_jump=True
             if e.type == pygame.KEYDOWN:
-                if (e.key==pygame.K_UP or e.key==pygame.K_w or e.key==pygame.K_SPACE) and player_rect.bottom==GROUND_Y:
+                if (e.key==pygame.K_UP or
+                    e.key==pygame.K_w or
+                    e.key==pygame.K_SPACE
+                    and player_rect.bottom==GROUND_Y):
                     player_grav = PLAYER_DEF_GRAV
                     continue_jump=True
             if e.type == pygame.KEYUP:
@@ -422,7 +442,12 @@ while is_running:
         else:
             if e.type == pygame.MOUSEBUTTONUP:
                 if show_menu:
-                    if button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard and not victory:
+                    if (
+                        button_rect.collidepoint(mouse_x, mouse_y) 
+                        and show_menu 
+                        and not show_leaderboard 
+                        and not victory
+                        ):
                         with open('all_player_data/leaderboard.txt', 'r') as f:
                             all_data = f.read()
                         if name=="":
@@ -433,13 +458,18 @@ while is_running:
                         else:
                             high_score = 0
                         is_playing=True
-                    if text_box_rect.collidepoint(mouse_x, mouse_y) and not text_box_active and not show_leaderboard:
-                        text_box_active = True
-                    if not text_box_rect.collidepoint(mouse_x, mouse_y) and text_box_active and not show_leaderboard:
-                        text_box_active = False
-                    if leaderboard_button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
-                        show_leaderboard=True
-                    if show_leaderboard and menu_button_rect.collidepoint(mouse_x, mouse_y):
+                    if not show_leaderboard:
+                        if (text_box_rect.collidepoint(mouse_x, mouse_y) and 
+                            not text_box_active):
+                            text_box_active = True
+                        if (
+                            not text_box_rect.collidepoint(mouse_x, mouse_y)
+                            and text_box_active):
+                            text_box_active = False
+                        if leaderboard_button_rect.collidepoint(
+                            mouse_x, mouse_y) and show_menu:
+                            show_leaderboard=True
+                    elif menu_button_rect.collidepoint(mouse_x, mouse_y):
                         show_leaderboard=False
                 else:
                     if menu_button_rect.collidepoint(mouse_x, mouse_y):
@@ -491,9 +521,18 @@ while is_running:
         key = pygame.key.get_pressed()
         mouse = pygame.mouse.get_pressed()
         player_animation()
-        if key[pygame.K_SPACE] or key[pygame.K_w] or mouse==(True, False, False):
+        if (
+            key[pygame.K_SPACE] or 
+            key[pygame.K_w] or 
+            mouse==(True, False, False)
+            ):
             jumping = True
-            if player_grav<=0 and player_grav>PLAYER_MAX_GRAV-player_grav and player_rect.y>90 and continue_jump:
+            if (
+                player_grav<=0 and 
+                player_grav>PLAYER_MAX_GRAV-player_grav and 
+                player_rect.y>90 and 
+                continue_jump
+                ):
                 player_grav-=2
             if player_rect.bottom==GROUND_Y:
                 player_grav=PLAYER_DEF_GRAV
