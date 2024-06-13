@@ -137,15 +137,12 @@ name_text = font.render("Player:", True, (22, 0, 16))
 leaderboard_title_surf = font.render('Leaderboard', False, (64,64,64))
 leaderboard_title_rect = leaderboard_title_surf.get_rect(center=(200,25))
 
-to_m_button_surf = font.render('Return to Menu', True, (64,64,64))
-to_m_button_rect = to_m_button_surf.get_rect(center=(400,350))
-
 # death
 died_surf = font.render("You died! Press space to restart", True, (0,0,0))
 died_rect = died_surf.get_rect(center=(400,100))
 
 menu_button_surf = font.render("Return to Menu", True, (64,64,64))
-menu_button_rect = menu_button_surf.get_rect(center=(400,300))
+menu_button_rect = menu_button_surf.get_rect(center=(400,350))
 
 # clocks
 clock = pygame.time.Clock()
@@ -192,7 +189,7 @@ def display_menu():
 
 def display_leaderboard():
     display.fill("seagreen4")
-    display.blit(to_m_button_surf,to_m_button_rect)
+    display.blit(menu_button_surf,menu_button_rect)
     display.blit(leaderboard_title_surf, leaderboard_title_rect)
     
     with open('all_player_data/top-10.txt', 'r') as f:
@@ -449,7 +446,7 @@ while is_running:
                     if leaderboard_button_rect.collidepoint(mouse_x, mouse_y) and show_menu and not show_leaderboard:
                         print('display leaderboard')
                         show_leaderboard=True
-                    if show_leaderboard and to_m_button_rect.collidepoint(mouse_x, mouse_y):
+                    if show_leaderboard and menu_button_rect.collidepoint(mouse_x, mouse_y):
                         print('leaderboard closed')
                         show_leaderboard=False
                 else:
