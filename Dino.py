@@ -49,7 +49,7 @@ GROUND_Y = 300
 foreground = pygame.image.load('media/graphics/environment/foreground.png').convert_alpha()
 
 # apple
-apple_surf = pygame.image.load('media\graphics\characters\player\player_crouch.png').convert_alpha()
+apple_surf = pygame.image.load('media/graphics/apple.png').convert_alpha()
 apple_rect = apple_surf.get_rect(bottomleft=(800,GROUND_Y))
 apple_list = []
 
