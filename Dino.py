@@ -58,12 +58,19 @@ player_walk_1 = pygame.image.load('media/graphics/characters/player/player_walk_
 player_walk_2 = pygame.image.load('media/graphics/characters/player/player_walk_2.png').convert_alpha()
 player_walk_3 = pygame.image.load('media/graphics/characters/player/player_walk_3.png').convert_alpha()
 
+player_walk_1_god = pygame.image.load('media/graphics/characters/player/player_walk_1 - god.png').convert_alpha()
+player_walk_2_god = pygame.image.load('media/graphics/characters/player/player_walk_2 - god.png').convert_alpha()
+player_walk_3_god = pygame.image.load('media/graphics/characters/player/player_walk_3 - god.png').convert_alpha()
+
 player_in = 0
 player_jumping = pygame.image.load('media/graphics/characters/player/player_jump.png').convert_alpha()
+player_jumping_god = pygame.image.load('media/graphics/characters/player/player_jump - god.png').convert_alpha()
 
 player_crouch = pygame.image.load('media/graphics/characters/player/player_crouch.png').convert_alpha()
+player_crouch_god = pygame.image.load('media/graphics/characters/player/player_crouch - god.png').convert_alpha()
 
 player_walk = [player_walk_1, player_walk_2, player_walk_1, player_walk_3]
+player_walk_god = [player_walk_1_god, player_walk_2_god, player_walk_1_god, player_walk_3_god]
 
 player_surf = player_walk[player_in]
 player_rect = player_surf.get_rect(bottomleft=(50, GROUND_Y))
@@ -247,12 +254,19 @@ def player_animation():
     global player_surf, player_in
     
     if player_rect.bottom<GROUND_Y:
-       player_surf = player_jumping
+        if not god_mode:
+           player_surf = player_jumping
+        else:
+           player_surf = player_jumping_god
+    
     else:
         player_in += 0.2
         if int(player_in) >= len(player_walk):
             player_in=0
-        player_surf = player_walk[(int(player_in))]
+        if not god_mode:
+            player_surf = player_walk[(int(player_in))]
+        else:
+            player_surf = player_walk_god[(int(player_in))]
 
 def player_crouching():
     global player_rect, player_surf, player_grav
@@ -260,17 +274,22 @@ def player_crouching():
     if player_rect.bottom<300:
         player_grav+=4
     else:
-        player_surf = player_crouch
+        if not god_mode:
+            player_surf = player_crouch
+        else:
+            player_surf = player_crouch_god
         player_rect = player_surf.get_rect(bottomleft = (50, GROUND_Y))
 
 # apple functions
 def apple_movement(applelist):
-    if applelist:
-        for apple in applelist:
-            apple.x-=platform_speed
-            display.blit(apple_surf, apple)
-        applelist = [apple for apple in applelist if apple.right>=0]
-        return applelist
+    if not god_mode:
+        if applelist:
+            for apple in applelist:
+                apple.x-=platform_speed
+                display.blit(apple_surf, apple)
+            applelist = [apple for apple in applelist if apple.right>=0]
+            return applelist
+        else: return []
     else: return []
 
 def apple_collision(player, apples):
