@@ -4,7 +4,7 @@ Imagine: a chicken running joyously across the vast green fields, under a serene
 
 In Chicken Jump, you are that chicken.
 
-Chicken Jump is an indie 2D infinite scrolling platformer game developed, with passion, by an intern at a totally real company.
+Chicken Jump is an indie 2D infinite scrolling platformer game developed, with passion, by a totally legit intern at a totally real company.
 
 ## Menu
 
