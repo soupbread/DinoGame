@@ -35,3 +35,5 @@ There are infinite possibilities...
 - Challenge your hand-eye coordination and reaction speed!
 - The speed increases as you run further.
 - A variety of enemies.
+
+Totally not copied from the advertisement that was made along with the game.
