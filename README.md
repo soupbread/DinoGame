@@ -40,8 +40,8 @@ All of this is totally not copied from the advertisement that was made along wit
 
 # Credits
 
-Sprites & graphics: me
-
 Code template: https://github.com/bassemfarid/Dino-Game-Internship-Project
 
 The rest of the code: me
+
+Sprites & graphics: me
