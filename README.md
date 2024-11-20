@@ -45,3 +45,5 @@ Code template: https://github.com/bassemfarid/Dino-Game-Internship-Project
 The rest of the code: me
 
 Sprites & graphics: me
+
+Font: Goudy Stout by Frederic Goudy
